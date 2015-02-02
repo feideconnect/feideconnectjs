@@ -177,6 +177,55 @@ define(function(require, exports, module) {
 		var path = "/apigkadm/apigks/" + id + "/exists";
 		this._request('core', path, null, ['apigkadmin'], callback);	
 	};
+	FeideConnect.prototype.getGroups = function(callback) {
+		var path = "/adhocgroups/";
+		this._request('core', path, null, ['adhocgroupadmin'], callback);
+	};
+
+	FeideConnect.prototype.addGroup = function(data, callback) {
+		var path = "/adhocgroups/";
+		this._requestObj("POST", 'core', path, null, ['adhocgroupadmin'], data, callback);
+	};
+
+	FeideConnect.prototype.delGroup = function(groupid, callback) {
+		var path = "/adhocgroups/" + groupid;
+		this._requestObj("DELETE", 'core', path, null, ['adhocgroupadmin'], null, callback);
+	};
+
+	FeideConnect.prototype.getGroupMembers = function(groupid, callback) {
+		var path = "/adhocgroups/" + groupid + "/members";
+		this._request('core', path, null, ['adhocgroupadmin'], callback);
+	};
+
+	FeideConnect.prototype.addGroupMember = function(groupid, token, type, callback) {
+		var data = [{"token": token, "type": type}];
+		var path = "/adhocgroups/" + groupid + "/members";
+		this._requestObj("PATCH", 'core', path, null, ['adhocgroupadmin'], data, callback);
+	};
+
+	FeideConnect.prototype.delGroupMember = function(groupid, userid, callback) {
+		var data = [userid];
+		var path = "/adhocgroups/" + groupid + "/members";
+		this._requestObj("DELETE", 'core', path, null, ['adhocgroupadmin'], data, callback);
+	};
+
+	FeideConnect.prototype.getGroupMemberships = function(callback) {
+		var path = "/adhocgroups/memberships";
+		this._request('core', path, null, ['adhocgroupadmin'], callback);
+	};
+
+	FeideConnect.prototype.confirmGroupMembership = function(groupid, callback) {
+		var path = "/adhocgroups/memberships";
+		var data = [groupid];
+		this._requestObj("PATCH", 'core', path, null, ['adhocgroupadmin'], data, callback);
+	};
+
+	FeideConnect.prototype.leaveGroup = function(groupid, callback) {
+		var path = "/adhocgroups/memberships";
+		var data = [groupid];
+		this._requestObj("DELETE", 'core', path, null, ['adhocgroupadmin'], data, callback);
+	};
+
 
 
 
