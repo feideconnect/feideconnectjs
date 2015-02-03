@@ -136,8 +136,6 @@ define(function(require, exports, module) {
 		this._requestObj('DELETE', 'core', path, null, ['clientadmin'], null, callback);
 	};
 
-	
-
 	FeideConnect.prototype.clientsUpdateLogo = function(id, obj, callback) {
 		var path = "/clientadm/clients/" + id + "/logo";
 		var contenttype = obj.contenttype;
@@ -147,11 +145,17 @@ define(function(require, exports, module) {
 
 	};
 
-
 	FeideConnect.prototype.apigkList = function(callback) {
 		var path = "/apigkadm/apigks/";
 		this._request('core', path, null, ['apigkadmin'], callback);			
 	};
+
+	FeideConnect.prototype.apigkPublicList = function(callback) {
+		var path = "/apigkadm/public";
+		this._requestPublic('core', path, callback);
+
+	};
+
 	FeideConnect.prototype.apigkRegister = function(obj, callback) {
 		var path = "/apigkadm/apigks/";
 		this._requestObj('POST', 'core', path, null, ['apigkadmin'], obj, callback);
@@ -358,6 +362,22 @@ define(function(require, exports, module) {
 
 
 	};
+
+	FeideConnect.prototype._requestPublic = function(instance, endpoint, callback) {
+
+		var url = this.config.apis[instance] + endpoint;
+		console.log("About to perform a public request to " + instance + " [" + url + "]");
+		$.ajax({
+			url: url,
+			dataType: 'json',
+			success: function(data) {
+				callback(data);
+			}
+		});
+
+	};
+
+
 
 
 	FeideConnect.prototype.check = function() {
