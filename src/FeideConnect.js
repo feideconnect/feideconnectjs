@@ -15,7 +15,8 @@ define(function(require, exports, module) {
 			token: "https://auth.dev.feideconnect.no/oauth/token",
 			apis: {
 				"auth": "https://auth.dev.feideconnect.no",
-				"core": "http://api.dev.feideconnect.no:6543"
+				"core": "http://api.dev.feideconnect.no:6543",
+				"groups": "http://api.dev.feideconnect.no:7654"
 			}
 		};
 		var fcPilot = {
@@ -24,7 +25,8 @@ define(function(require, exports, module) {
 			token: "https://auth.dev.feideconnect.no/oauth/token",
 			apis: {
 				"auth": "https://auth.feideconnect.no",
-				"core": "http://api.dev.feideconnect.no:6543"
+				"core": "http://api.dev.feideconnect.no:6543",
+				"groups": "http://api.dev.feideconnect.no:7654"
 			}
 		};
 		var fcDevRunscope = {
@@ -32,7 +34,8 @@ define(function(require, exports, module) {
 			authorization: "https://auth.dev.feideconnect.no/oauth/authorization",
 			apis: {
 				"auth": "https://auth.dev.feideconnect.no",
-				"core": "http://api.dev.feideconnect.no:6543"
+				"core": "http://api.dev.feideconnect.no:6543",
+				"groups": "http://api.dev.feideconnect.no:7654"
 			}
 		};
 
@@ -180,9 +183,17 @@ define(function(require, exports, module) {
 		var path = "/apigkadm/apigks/" + id + "/exists";
 		return this._request('core', path, null, ['apigkadmin'], callback);	
 	};
+
+
+
 	FeideConnect.prototype.getGroups = function(callback) {
 		var path = "/adhocgroups/";
 		return this._request('core', path, null, ['adhocgroupadmin'], callback);
+	};
+
+	FeideConnect.prototype.updateGroup = function(groupid, data, callback) {
+		var path = "/adhocgroups/" + groupid;
+		return this._requestObj("PATCH", 'core', path, null, ['adhocgroupadmin'], data, callback);
 	};
 
 	FeideConnect.prototype.addGroup = function(data, callback) {
@@ -233,15 +244,15 @@ define(function(require, exports, module) {
 
 	FeideConnect.prototype.vootGroupsList = function(callback) {
 		var path = "/groups/me/groups";
-		return this._request('core', path, null, ['groups'], callback);
+		return this._request('groups', path, null, ['groups'], callback);
 	};
 	FeideConnect.prototype.vootGroupsPublicList = function(callback) {
 		var path = "/groups/groups";
-		return this._request('core', path, null, ['groups'], callback);
+		return this._request('groups', path, null, ['groups'], callback);
 	};
 	FeideConnect.prototype.vootGrouptypes = function(callback) {
 		var path = "/groups/grouptypes";
-		return this._request('core', path, null, ['groups'], callback);
+		return this._request('groups', path, null, ['groups'], callback);
 	};
 
 
@@ -272,7 +283,7 @@ define(function(require, exports, module) {
 		var headers = {};
 
 		return new Promise(function(resolve, reject) {
-			this.jso.ajax({
+			that.jso.ajax({
 				url: url,
 				type: method,
 				data: data,
@@ -307,7 +318,7 @@ define(function(require, exports, module) {
 		console.log("About to perform a JSO OAuth request to " + instance + " [" + url + "]");
 
 		return new Promise(function(resolve, reject) {
-			this.jso.ajax({
+			that.jso.ajax({
 				url: url,
 				type: method,
 				data: JSON.stringify(data, undefined, 2),
