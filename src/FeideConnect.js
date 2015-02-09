@@ -232,6 +232,18 @@ define(function(require, exports, module) {
 
 
 
+	FeideConnect.prototype.vootGroupsList = function(callback) {
+		var path = "/groups/me/groups";
+		this._request('core', path, null, ['groups'], callback);
+	};
+	FeideConnect.prototype.vootGroupsPublicList = function(callback) {
+		var path = "/groups/groups";
+		this._request('core', path, null, ['groups'], callback);
+	};
+	FeideConnect.prototype.vootGrouptypes = function(callback) {
+		var path = "/groups/grouptypes";
+		this._request('core', path, null, ['groups'], callback);
+	};
 
 
 	FeideConnect.prototype.setAuthState = function(ns) {
