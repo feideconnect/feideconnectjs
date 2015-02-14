@@ -101,6 +101,7 @@ define(function(require, exports, module) {
 			if  (res.audience !== that.config.client_id) {
 				throw new Error('Wrong audience for this token.');
 			}
+			console.error("Set userinfo");
 			that.userinfo = res.user;
 			that.setAuthState(true);
 
@@ -123,6 +124,12 @@ define(function(require, exports, module) {
 		var path = "/clientadm/clients/";
 		return this._request('core', path, null, ['clientadmin'], callback);		
 	};
+
+	FeideConnect.prototype.clientsByScope = function(scope, callback) {
+		var path = "/clientadm/clients/?scope=" + encodeURIComponent(scope);
+		return this._request('core', path, null, ['clientadmin'], callback);		
+	};
+	
 
 	FeideConnect.prototype.clientsRegister = function(obj, callback) {
 		var path = "/clientadm/clients/";
@@ -184,6 +191,11 @@ define(function(require, exports, module) {
 		return this._request('core', path, null, ['apigkadmin'], callback);	
 	};
 
+	FeideConnect.prototype.apigkClientRequests = function(callback) {
+		var owner = this.userinfo.userid;
+		var path = "/apigkadm/apigks/owners/" + owner + "/clients/";
+		return this._request('core', path, null, ['apigkadmin'], callback);	
+	};
 
 
 	FeideConnect.prototype.getGroups = function(callback) {
