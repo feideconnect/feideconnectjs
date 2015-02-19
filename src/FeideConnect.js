@@ -313,7 +313,15 @@ define(function(require, exports, module) {
 					resolve(data);
 				},
 				error: function(jqXHR, text, error) {
-					var str = 'JSO error on [' + endpoint + '] : {' + text + '}  HTTP status (' + error + ')';
+					var str = 'HTTP status (' + error + '), JSO error on [' + endpoint + '] ' + text + '';
+					if (jqXHR.hasOwnProperty("responseText") && typeof jqXHR.responseText === 'string') {
+						try {
+							var xmsg = JSON.parse(jqXHR.responseText);
+							if (xmsg.hasOwnProperty("message")) {
+								str = xmsg.message + " \n(" + str + ")";
+							}
+						} catch(err) {}
+					}
 					reject(new Error(str));
 				}
 			});
@@ -347,12 +355,57 @@ define(function(require, exports, module) {
 					resolve(data);
 				},
 				error: function(jqXHR, text, error) {
-					var str = 'JSO error on [' + endpoint + '] : {' + text + '}  HTTP status (' + error + ')';
+					var str = 'HTTP status (' + error + '), JSO error on [' + endpoint + '] ' + text + '';
+					if (jqXHR.hasOwnProperty("responseText") && typeof jqXHR.responseText === 'string') {
+						try {
+							var xmsg = JSON.parse(jqXHR.responseText);
+							if (xmsg.hasOwnProperty("message")) {
+								str = xmsg.message + " \n(" + str + ")";
+							}
+						} catch(err) {}
+					}
 					reject(new Error(str));
 				}
 			});
 		});
 	};
+
+
+	FeideConnect.prototype._customRequest = function(url, request, require, callback) {
+		var that = this;
+		console.log("About to perform a JSO OAuth request to [" + url + "]");
+		return new Promise(function(resolve, reject) {
+			that.jso.ajax({
+				url: url,
+				oauth: {
+					scopes: {
+						request: request,
+						require: require
+					}
+				},
+				dataType: 'json',
+				success: function(data) {
+					if (typeof callback === 'function') callback(data);
+					resolve(data);
+				},
+				error: function(jqXHR, text, error) {
+					var str = 'HTTP status (' + error + '), JSO error on [' + endpoint + '] ' + text + '';
+					if (jqXHR.hasOwnProperty("responseText") && typeof jqXHR.responseText === 'string') {
+						try {
+							var xmsg = JSON.parse(jqXHR.responseText);
+							if (xmsg.hasOwnProperty("message")) {
+								str = xmsg.message + " \n(" + str + ")";
+							}
+						} catch(err) {}
+					}
+					reject(new Error(str));
+				}
+			});
+
+		});
+	};
+
+
 
 	FeideConnect.prototype._request = function(instance, endpoint, request, require, callback) {
 
@@ -374,13 +427,20 @@ define(function(require, exports, module) {
 					resolve(data);
 				},
 				error: function(jqXHR, text, error) {
-					var str = 'JSO error on [' + endpoint + '] : {' + text + '}  HTTP status (' + error + ')';
+					var str = 'HTTP status (' + error + '), JSO error on [' + endpoint + '] ' + text + '';
+					if (jqXHR.hasOwnProperty("responseText") && typeof jqXHR.responseText === 'string') {
+						try {
+							var xmsg = JSON.parse(jqXHR.responseText);
+							if (xmsg.hasOwnProperty("message")) {
+								str = xmsg.message + " \n(" + str + ")";
+							}
+						} catch(err) {}
+					}
 					reject(new Error(str));
 				}
 			});
 
 		});
-
 
 	};
 
@@ -398,7 +458,15 @@ define(function(require, exports, module) {
 					resolve(data);
 				},
 				error: function(jqXHR, text, error) {
-					var str = 'JSO error on [' + endpoint + '] : {' + text + '}  HTTP status (' + error + ')';
+					var str = 'HTTP status (' + error + '), JSO error on [' + endpoint + '] ' + text + '';
+					if (jqXHR.hasOwnProperty("responseText") && typeof jqXHR.responseText === 'string') {
+						try {
+							var xmsg = JSON.parse(jqXHR.responseText);
+							if (xmsg.hasOwnProperty("message")) {
+								str = xmsg.message + " \n(" + str + ")";
+							}
+						} catch(err) {}
+					}
 					reject(new Error(str));
 				}
 			});
