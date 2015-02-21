@@ -101,11 +101,15 @@ define(function(require, exports, module) {
 			if  (res.audience !== that.config.client_id) {
 				throw new Error('Wrong audience for this token.');
 			}
-			console.error("Set userinfo");
+			// console.error("Set userinfo");
 			that.userinfo = res.user;
 			that.setAuthState(true);
 
 		});
+	};
+
+	FeideConnect.prototype.getUserInfo = function() {
+		return this._request('auth', '/userinfo', null, ['userinfo']);
 	};
 
 
@@ -265,6 +269,17 @@ define(function(require, exports, module) {
 	FeideConnect.prototype.vootGrouptypes = function(callback) {
 		var path = "/groups/grouptypes";
 		return this._request('groups', path, null, ['groups'], callback);
+	};
+
+
+	FeideConnect.prototype.authorizationsList = function(callback) {
+		var path = "/authorizations/";
+		return this._request('core', path, null, ['authzinfo'], callback);	
+	};
+
+	FeideConnect.prototype.authorizationsDelete = function(id, callback) {
+		var path = "/authorizations/" + id;
+		return this._requestObj("DELETE", 'core', path, null, ['authzinfo'], null, callback);
 	};
 
 
