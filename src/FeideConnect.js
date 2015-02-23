@@ -1,7 +1,8 @@
 define(function(require, exports, module) {
 
 	var 
-		JSO = require('bower/jso/src/jso');
+		JSO = require('bower/jso/src/jso'),
+		$ = require('jquery');
 		
 
 	JSO.enablejQuery($);
