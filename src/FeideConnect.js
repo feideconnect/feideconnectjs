@@ -172,6 +172,12 @@ define(function(require, exports, module) {
 		var path = "/clientadm/clients/" + obj.id;
 		return this._requestObj('PATCH', 'core', path, null, ['clientadmin'], obj, callback);
 	};
+
+	FeideConnect.prototype.clientsAuthorizeAPIGKscopes = function(id, obj, callback) {
+		var path = "/clientadm/clients/" + id + "/gkscopes";
+		return this._requestObj('PATCH', 'core', path, null, ['clientadmin'], obj, callback);
+	};
+
 	FeideConnect.prototype.clientsDelete = function(clientid, callback) {
 		var path = "/clientadm/clients/" + clientid;
 		return this._requestObj('DELETE', 'core', path, null, ['clientadmin'], null, callback);
