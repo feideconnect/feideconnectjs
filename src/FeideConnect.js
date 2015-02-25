@@ -94,6 +94,26 @@ define(function(require, exports, module) {
 
 	};
 
+
+	/**
+	 * Returns a promise that is fullfilled when the user is completed authenticated.
+	 * It will initiate authentication if the user is not already authenticated.
+	 * 
+	 * @return {[type]} [description]
+	 */
+	FeideConnect.prototype.authenticated = function() {
+		var that = this;
+		return new Promise(function(resolve, reject) {
+			if (that.userinfo) {
+				return resolve(this.userinfo);
+			} else {
+				reject(new Error("Not yet authenticated"));
+			}
+		}).catch(function(err) {
+			return that.authenticate();
+		});
+	};
+
 	FeideConnect.prototype.authenticate = function() {
 
 		var that = this;
@@ -106,6 +126,7 @@ define(function(require, exports, module) {
 			that.userinfo = res.user;
 			that.setAuthState(true);
 
+			return res;
 		});
 	};
 
@@ -122,6 +143,12 @@ define(function(require, exports, module) {
 	FeideConnect.prototype.psSearch = function(realm, query, callback) {
 		var path = "/peoplesearch/search/" + realm + "/" + encodeURI(query);
 		return this._request('core', path, null, ['peoplesearch'], callback);		
+	};
+
+
+	FeideConnect.prototype.getClient = function(id, callback) {
+		var path = "/clientadm/clients/" + id;
+		return this._request('core', path, null, ['clientadmin'], callback);		
 	};
 
 	
