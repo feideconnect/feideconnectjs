@@ -189,7 +189,6 @@ define(function(require, exports, module) {
 		console.log("File content type: " + contenttype);
 		contenttype = "image/jpeg";
 		return this._requestBinary('POST', 'core', path, null, ['clientadmin'], obj, contenttype, callback);
-
 	};
 
 	FeideConnect.prototype.apigkList = function(callback) {
@@ -241,6 +240,11 @@ define(function(require, exports, module) {
 		return this._request('core', path, null, ['adhocgroupadmin'], callback);
 	};
 
+	FeideConnect.prototype.getGroup = function(id, callback) {
+		var path = "/adhocgroups/" + id;
+		return this._request('core', path, null, ['adhocgroupadmin'], callback);
+	};
+
 	FeideConnect.prototype.updateGroup = function(groupid, data, callback) {
 		var path = "/adhocgroups/" + groupid;
 		return this._requestObj("PATCH", 'core', path, null, ['adhocgroupadmin'], data, callback);
@@ -267,6 +271,12 @@ define(function(require, exports, module) {
 		return this._requestObj("PATCH", 'core', path, null, ['adhocgroupadmin'], data, callback);
 	};
 
+	FeideConnect.prototype.updateGroupMember = function(groupid, userid, type, callback) {
+		var data = [{"id": userid, "type": type}];
+		var path = "/adhocgroups/" + groupid + "/members";
+		return this._requestObj("PATCH", 'core', path, null, ['adhocgroupadmin'], data, callback);
+	};
+
 	FeideConnect.prototype.delGroupMember = function(groupid, userid, callback) {
 		var data = [userid];
 		var path = "/adhocgroups/" + groupid + "/members";
@@ -289,8 +299,6 @@ define(function(require, exports, module) {
 		var data = [groupid];
 		return this._requestObj("DELETE", 'core', path, null, ['adhocgroupadmin'], data, callback);
 	};
-
-
 
 	FeideConnect.prototype.vootGroupsList = function(callback) {
 		var path = "/groups/me/groups";
