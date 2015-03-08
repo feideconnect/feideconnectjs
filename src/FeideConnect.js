@@ -245,6 +245,11 @@ define(function(require, exports, module) {
 		return this._request('core', path, null, ['adhocgroupadmin'], callback);
 	};
 
+	FeideConnect.prototype.getGroupDetails = function(id, callback) {
+		var path = "/adhocgroups/" + id + "/details";
+		return this._request('core', path, null, ['adhocgroupadmin'], callback);
+	};
+
 	FeideConnect.prototype.updateGroup = function(groupid, data, callback) {
 		var path = "/adhocgroups/" + groupid;
 		return this._requestObj("PATCH", 'core', path, null, ['adhocgroupadmin'], data, callback);
@@ -292,6 +297,13 @@ define(function(require, exports, module) {
 		var path = "/adhocgroups/memberships";
 		var data = [groupid];
 		return this._requestObj("PATCH", 'core', path, null, ['adhocgroupadmin'], data, callback);
+	};
+
+
+	FeideConnect.prototype.joinGroupFromInvitation = function(groupid, token, callback) {
+		var path = "/adhocgroups/" + groupid + "/invitation";
+		var data = {"invitation_token": token};
+		return this._requestObj("POST", 'core', path, null, ['adhocgroupadmin'], data, callback);
 	};
 
 	FeideConnect.prototype.leaveGroup = function(groupid, callback) {
