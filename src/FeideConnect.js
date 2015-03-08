@@ -245,6 +245,11 @@ define(function(require, exports, module) {
 		return this._request('core', path, null, ['adhocgroupadmin'], callback);
 	};
 
+	FeideConnect.prototype.getGroupInvited = function(id, token, callback) {
+		var path = "/adhocgroups/" + id + '?invitation_token=' + encodeURIComponent(token);
+		return this._request('core', path, null, ['adhocgroupadmin'], callback);
+	};
+
 	FeideConnect.prototype.getGroupDetails = function(id, callback) {
 		var path = "/adhocgroups/" + id + "/details";
 		return this._request('core', path, null, ['adhocgroupadmin'], callback);
