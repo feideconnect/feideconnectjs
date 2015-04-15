@@ -7,7 +7,7 @@ Installed via bower.
 
 in bower.json:
 
-	"feideconnectjs": "git@github.com:feideconnect/feideconnect.js.git",
+	"feideconnectjs": "git@github.com:feideconnect/feideconnectjs.git",
 
 # Usage
 
