@@ -33,7 +33,7 @@ define(function(require, exports, module) {
 		var fcPilot = {
 			providerId: "feideconnect-pilot",
 			authorization: "https://auth.feideconnect.no/oauth/authorization",
-			token: "https://auth.dev.feideconnect.no/oauth/token",
+			token: "https://auth.feideconnect.no/oauth/token",
 			apis: {
 				"auth": "https://auth.feideconnect.no",
 				"core": "https://api.feideconnect.no",
