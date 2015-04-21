@@ -10,14 +10,24 @@ define(function(require, exports, module) {
 
 	var FeideConnect = function(config) {
 
-		var fcDev = {
-			providerId: "feideconnect-dev",
+		var fcDev1 = {
+			providerId: "feideconnect-dev1",
 			authorization: "https://auth.dev.feideconnect.no/oauth/authorization",
 			token: "https://auth.dev.feideconnect.no/oauth/token",
 			apis: {
 				"auth": "https://auth.dev.feideconnect.no",
 				"core": "http://api.dev.feideconnect.no:6543",
 				"groups": "http://api.dev.feideconnect.no:7654"
+			}
+		};
+		var fcDev = {
+			providerId: "feideconnect-dev",
+			authorization: "https://auth.dev.feideconnect.no/oauth/authorization",
+			token: "https://auth.dev.feideconnect.no/oauth/token",
+			apis: {
+				"auth": "https://auth.dev.feideconnect.no",
+				"core": "https://api.dev.feideconnect.no",
+				"groups": "https://groups-api.dev.feideconnect.no"
 			}
 		};
 		var fcPilot = {
@@ -26,19 +36,11 @@ define(function(require, exports, module) {
 			token: "https://auth.dev.feideconnect.no/oauth/token",
 			apis: {
 				"auth": "https://auth.feideconnect.no",
-				"core": "http://api.dev.feideconnect.no:6543",
-				"groups": "http://api.dev.feideconnect.no:7654"
+				"core": "https://api.feideconnect.no",
+				"groups": "https://groups-api.feideconnect.no"
 			}
 		};
-		var fcDevRunscope = {
-			providerId: "feideconnect-dev",
-			authorization: "https://auth.dev.feideconnect.no/oauth/authorization",
-			apis: {
-				"auth": "https://auth.dev.feideconnect.no",
-				"core": "http://api.dev.feideconnect.no:6543",
-				"groups": "http://api.dev.feideconnect.no:7654"
-			}
-		};
+
 
 		var defaults = {
 			"autologin": false
@@ -46,6 +48,9 @@ define(function(require, exports, module) {
 
 
 		var selectedConfig = {};
+		if (config.instance && config.instance === 'dev1') {
+			selectedConfig = fcDev1;
+		}
 		if (config.instance && config.instance === 'dev') {
 			selectedConfig = fcDev;
 		}
