@@ -167,6 +167,13 @@ define(function(require, exports, module) {
 		return this._request('core', path, null, ['clientadmin'], callback);		
 	};
 	
+	FeideConnect.prototype.clientsByOrg = function(orgid, callback) {
+		var path = "/clientadm/clients/";
+		if (orgid !== null) {
+			path += "?organization=" + encodeURIComponent(orgid);
+		}
+		return this._request('core', path, null, ['clientadmin'], callback);		
+	};
 
 	FeideConnect.prototype.clientsRegister = function(obj, callback) {
 		var path = "/clientadm/clients/";
@@ -199,6 +206,14 @@ define(function(require, exports, module) {
 	FeideConnect.prototype.apigkList = function(callback) {
 		var path = "/apigkadm/apigks/";
 		return this._request('core', path, null, ['apigkadmin'], callback);			
+	};
+
+	FeideConnect.prototype.apigkListByOrg = function(orgid, callback) {
+		var path = "/apigkadm/apigks/";
+		if (orgid !== null) {
+			path += "?organization=" + encodeURIComponent(orgid);
+		}
+		return this._request('core', path, null, ['clientadmin'], callback);		
 	};
 
 	FeideConnect.prototype.apigkPublicList = function(callback) {
