@@ -28,7 +28,8 @@ define(function(require, exports, module) {
 				"auth": "https://auth.dev.feideconnect.no",
 				"core": "https://api.dev.feideconnect.no",
 				"groups": "https://groups-api.dev.feideconnect.no"
-			}
+			},
+			"debug": false
 		};
 		var fcPilot = {
 			providerId: "feideconnect-pilot",
@@ -43,7 +44,8 @@ define(function(require, exports, module) {
 
 
 		var defaults = {
-			"autologin": false
+			"autologin": false,
+			"debug": false
 		};
 
 
@@ -63,7 +65,7 @@ define(function(require, exports, module) {
 		this.config = $.extend({}, selectedConfig, defaults, config);
 
 		this.jso = new JSO(this.config);
-		console.log("JSO LOAded", this.jso);
+		console.log("JSO LOAded", this.config);
 		this.jso.callback();
 
 
@@ -249,11 +251,15 @@ define(function(require, exports, module) {
 	};
 
 	FeideConnect.prototype.apigkClientRequests = function(callback) {
-		var owner = this.userinfo.userid;
+		var owner = 'me';
 		var path = "/apigkadm/apigks/owners/" + owner + "/clients/";
 		return this._request('core', path, null, ['apigkadmin'], callback);	
 	};
 
+	FeideConnect.prototype.apigkClientRequestsByOrg = function(orgid, callback) {
+		var path = "/apigkadm/apigks/orgs/" + orgid + "/clients/";
+		return this._request('core', path, null, ['apigkadmin'], callback);	
+	};
 
 	FeideConnect.prototype.getGroups = function(callback) {
 		var path = "/adhocgroups/";
@@ -364,7 +370,7 @@ define(function(require, exports, module) {
 
 	FeideConnect.prototype.setAuthState = function(ns) {
 
-		if (this.authState === ns) return;
+		if (this.authState === ns) { return; }
 
 		this.authState = ns;
 		if (typeof this.callbacks.onStateChange === 'function') {
