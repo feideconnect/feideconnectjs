@@ -65,7 +65,7 @@ define(function(require, exports, module) {
 		this.config = $.extend({}, selectedConfig, defaults, config);
 
 		this.jso = new JSO(this.config);
-		console.log("JSO LOAded", this.config);
+		console.log("JSO Loaded", this.config);
 		this.jso.callback();
 
 
@@ -409,7 +409,7 @@ define(function(require, exports, module) {
 					}
 				},
 				success: function(data) {
-					if (typeof callback === 'function') callback(data);
+					if (typeof callback === 'function') { callback(data); }
 					resolve(data);
 				},
 				error: function(jqXHR, text, error) {
@@ -451,7 +451,7 @@ define(function(require, exports, module) {
 				},
 				dataType: 'json',
 				success: function(data) {
-					if (typeof callback === 'function') callback(data);
+					if (typeof callback === 'function') { callback(data); }
 					resolve(data);
 				},
 				error: function(jqXHR, text, error) {
@@ -485,11 +485,11 @@ define(function(require, exports, module) {
 				},
 				dataType: 'json',
 				success: function(data) {
-					if (typeof callback === 'function') callback(data);
+					if (typeof callback === 'function') { callback(data); }
 					resolve(data);
 				},
 				error: function(jqXHR, text, error) {
-					var str = 'HTTP status (' + error + '), JSO error on [' + endpoint + '] ' + text + '';
+					var str = 'HTTP status (' + error + '), JSO error on [' + url + '] ' + text + '';
 					if (jqXHR.hasOwnProperty("responseText") && typeof jqXHR.responseText === 'string') {
 						try {
 							var xmsg = JSON.parse(jqXHR.responseText);
@@ -523,7 +523,7 @@ define(function(require, exports, module) {
 				},
 				dataType: 'json',
 				success: function(data) {
-					if (typeof callback === 'function') callback(data);
+					if (typeof callback === 'function') { callback(data); }
 					resolve(data);
 				},
 				error: function(jqXHR, text, error) {
@@ -554,7 +554,7 @@ define(function(require, exports, module) {
 				url: url,
 				dataType: 'json',
 				success: function(data) {
-					if (typeof callback === 'function') callback(data);
+					if (typeof callback === 'function') { callback(data); }
 					resolve(data);
 				},
 				error: function(jqXHR, text, error) {
