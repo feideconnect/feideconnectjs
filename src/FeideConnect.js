@@ -1,5 +1,7 @@
 define(function(require, exports, module) {
 
+	"use strict";
+
 	var 
 		JSO = require('bower/jso/src/jso'),
 		$ = require('jquery');
@@ -129,7 +131,6 @@ define(function(require, exports, module) {
 			if  (res.audience !== that.config.client_id) {
 				throw new Error('Wrong audience for this token.');
 			}
-			// console.error("Set userinfo");
 			that.userinfo = res.user;
 			that.setAuthState(true);
 
@@ -151,6 +152,14 @@ define(function(require, exports, module) {
 		var path = "/peoplesearch/search/" + realm + "/" + encodeURI(query);
 		return this._request('core', path, null, ['peoplesearch'], callback);		
 	};
+
+
+	// TODO : Check what scope is really required.
+	FeideConnect.prototype.getMandatoryClients = function(orgid, callback) {
+		var path = "/orgs/" + orgid + "/mandatory_clients/";
+		return this._request('core', path, null, ['clientadmin'], callback);
+	};
+
 
 
 	FeideConnect.prototype.getClient = function(id, callback) {
