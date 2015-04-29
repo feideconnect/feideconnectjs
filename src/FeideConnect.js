@@ -157,10 +157,17 @@ define(function(require, exports, module) {
 	// TODO : Check what scope is really required.
 	FeideConnect.prototype.getMandatoryClients = function(orgid, callback) {
 		var path = "/orgs/" + orgid + "/mandatory_clients/";
-		return this._request('core', path, null, ['clientadmin'], callback);
+		return this._request('core', path, null, ['orgadmin'], callback);
 	};
-
-
+	FeideConnect.prototype.setMandatoryClient = function(orgid, clientid, callback) {
+		var path = "/orgs/" + orgid + "/mandatory_clients/";
+		var obj = clientid;
+		return this._requestObj('POST', 'core', path, null, ['orgadmin'], obj, callback);
+	};
+	FeideConnect.prototype.removeMandatoryClient = function(orgid, clientid, callback) {
+		var path = "/orgs/" + orgid + "/mandatory_clients/" + clientid;
+		return this._requestObj('DELETE', 'core', path, null, ['orgadmin'], null, callback);
+	};
 
 	FeideConnect.prototype.getClient = function(id, callback) {
 		var path = "/clientadm/clients/" + id;
@@ -212,6 +219,11 @@ define(function(require, exports, module) {
 		console.log("File content type: " + contenttype);
 		contenttype = "image/jpeg";
 		return this._requestBinary('POST', 'core', path, null, ['clientadmin'], obj, contenttype, callback);
+	};
+
+	FeideConnect.prototype.clientsPublicList = function(callback) {
+		var path = "/clientadm/public";
+		return this._requestPublic('core', path, callback);
 	};
 
 	FeideConnect.prototype.apigkList = function(callback) {
