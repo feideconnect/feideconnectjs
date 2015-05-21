@@ -86,8 +86,10 @@ define(function(require, exports, module) {
 
 
 		this.callbacks = {
-			"onStateChange": null
+			"onStateChange": null,
+			"onAuthenticated": []
 		};
+		this.authenticationInProgress = false;
 
 		this.authState = null;
 		this.userinfo = null;
@@ -97,7 +99,7 @@ define(function(require, exports, module) {
 
 		} else {
 			this.check();
-		}	
+		}
 
 
 	};
@@ -126,18 +128,25 @@ define(function(require, exports, module) {
 	 */
 	FeideConnect.prototype.authenticated = function() {
 		var that = this;
-		return new Promise(function(resolve, reject) {
-			if (that.userinfo) {
-				return resolve(this.userinfo);
-			} else {
-				reject(new Error("Not yet authenticated"));
-			}
-		}).catch(function(err) {
-			return that.authenticate();
-		});
+
+		if (that.userinfo) {
+			return new Promise(function(resolve, reject) {
+				return resolve(that.userinfo);
+			});
+		}
+
+		if (this.authenticationInProgress) {
+			return new Promise(function(resolveX, rejectX) {
+				that.callbacks.onAuthenticated.push(resolveX);
+			});
+		}
+
+		return that.authenticate();
 	};
 
 	FeideConnect.prototype.authenticate = function() {
+
+		this.authenticationInProgress = true;
 
 		var that = this;
 		return this._request('auth', '/userinfo', null, ['userinfo']).then(function(res) {
@@ -148,6 +157,14 @@ define(function(require, exports, module) {
 			that.userinfo = res.user;
 			that.setAuthState(true);
 
+			// console.error("Authenticated, now work with the callbacks", that.callbacks.onAuthenticated);
+
+			for(var i = 0; i < that.callbacks.onAuthenticated.length; i++) {
+				if (typeof that.callbacks.onAuthenticated[i] === 'function') {
+					that.callbacks.onAuthenticated[i](that.userinfo);
+				}
+			}
+			that.authenticationInProgress = false;
 			return res;
 		});
 	};
