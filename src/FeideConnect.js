@@ -44,6 +44,17 @@ define(function(require, exports, module) {
 			}
 		};
 
+		var fcDocker = {
+			providerId: "feideconnect-docker",
+			authorization: "http://auth.docker.feideconnect.no:8080/oauth/authorization",
+			token: "http://auth.docker.feideconnect.no:8080/oauth/token",
+			apis: {
+				"auth": "https://auth.feideconnect.no",
+				"core": "https://api.feideconnect.no",
+				"groups": "https://groups-api.feideconnect.no"
+			}
+		};
+
 
 		var defaults = {
 			"autologin": false,
@@ -60,6 +71,9 @@ define(function(require, exports, module) {
 		}
 		if (config.instance && config.instance === 'pilot') {
 			selectedConfig = fcPilot;
+		}
+		if (config.instance && config.instance === 'docker') {
+			selectedConfig = fcDocker;
 		}
 
 
