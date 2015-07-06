@@ -16,6 +16,6 @@
 		"tests"
 	],
 	"dependencies": {
-		"jso": "~2.0.1"
+		"jso": "version3"
 	}
 }
