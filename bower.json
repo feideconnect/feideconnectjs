@@ -7,7 +7,7 @@
 	],
 	"homepage": "http://feideconnect.no",
 	"main": "src/FeideConnect.js",
-	"private": true,
+	"private": false,
   "license": "LGPL 2.1",
 	"ignore": [
 		"**/.*",
