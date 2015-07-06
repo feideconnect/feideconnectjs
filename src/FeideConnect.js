@@ -4,648 +4,546 @@ define(function(require, exports, module) {
 
 	var 
 		JSO = require('bower/jso/src/jso'),
+		OpenIDAuthentication = require('bower/jso/src/Authentication/OpenIDAuthentication'),
 		$ = require('jquery');
 		
 
 	JSO.enablejQuery($);
 
 
-	var FeideConnect = function(config) {
-
-		var fcDev1 = {
-			providerId: "feideconnect-dev1",
-			authorization: "https://auth.dev.feideconnect.no/oauth/authorization",
-			token: "https://auth.dev.feideconnect.no/oauth/token",
-			apis: {
-				"auth": "https://auth.dev.feideconnect.no",
-				"core": "http://api.dev.feideconnect.no:6543",
-				"groups": "http://api.dev.feideconnect.no:7654"
-			}
-		};
-		var fcDev = {
-			providerId: "feideconnect-dev",
-			authorization: "https://auth.dev.feideconnect.no/oauth/authorization",
-			token: "https://auth.dev.feideconnect.no/oauth/token",
-			apis: {
-				"auth": "https://auth.dev.feideconnect.no",
-				"core": "https://api.dev.feideconnect.no",
-				"groups": "https://groups-api.dev.feideconnect.no"
-			},
-			"debug": false
-		};
-		var fcPilot = {
-			providerId: "feideconnect-pilot",
-			authorization: "https://auth.feideconnect.no/oauth/authorization",
-			token: "https://auth.feideconnect.no/oauth/token",
-			apis: {
-				"auth": "https://auth.feideconnect.no",
-				"core": "https://api.feideconnect.no",
-				"groups": "https://groups-api.feideconnect.no"
-			}
-		};
-
-		var fcDocker = {
-			providerId: "feideconnect-docker",
-			authorization: "http://auth.docker.feideconnect.no:8080/oauth/authorization",
-			token: "http://auth.docker.feideconnect.no:8080/oauth/token",
-			apis: {
-				"auth": "https://auth.feideconnect.no",
-				"core": "https://api.feideconnect.no",
-				"groups": "https://groups-api.feideconnect.no"
-			}
-		};
-
-
-		var defaults = {
-			"autologin": false,
-			"debug": false
-		};
-
-
-		var selectedConfig = {};
-		if (config.instance && config.instance === 'dev1') {
-			selectedConfig = fcDev1;
+	var fcDev1 = {
+		providerId: "feideconnect-dev1",
+		authorization: "https://auth.dev.feideconnect.no/oauth/authorization",
+		token: "https://auth.dev.feideconnect.no/oauth/token",
+		apis: {
+			"auth": "https://auth.dev.feideconnect.no",
+			"core": "http://api.dev.feideconnect.no:6543",
+			"groups": "http://api.dev.feideconnect.no:7654"
 		}
-		if (config.instance && config.instance === 'dev') {
-			selectedConfig = fcDev;
+	};
+	var fcDev = {
+		providerId: "feideconnect-dev",
+		authorization: "https://auth.dev.feideconnect.no/oauth/authorization",
+		token: "https://auth.dev.feideconnect.no/oauth/token",
+		apis: {
+			"auth": "https://auth.dev.feideconnect.no",
+			"core": "https://api.feideconnect.no",
+			"groups": "https://groups-api.dev.feideconnect.no"
+		},
+		"debug": false
+	};
+	var fcPilot = {
+		providerId: "feideconnect-pilot",
+		authorization: "https://auth.feideconnect.no/oauth/authorization",
+		token: "https://auth.feideconnect.no/oauth/token",
+		apis: {
+			"auth": "https://auth.feideconnect.no",
+			"core": "https://api.feideconnect.no",
+			"groups": "https://groups-api.feideconnect.no"
 		}
-		if (config.instance && config.instance === 'pilot') {
-			selectedConfig = fcPilot;
-		}
-		if (config.instance && config.instance === 'docker') {
-			selectedConfig = fcDocker;
-		}
-
-
-
-		this.config = $.extend({}, selectedConfig, defaults, config);
-
-		this.jso = new JSO(this.config);
-		console.log("JSO Loaded", this.config);
-		this.jso.callback();
-
-
-		this.callbacks = {
-			"onStateChange": null,
-			"onAuthenticated": []
-		};
-		this.authenticationInProgress = false;
-
-		this.authState = null;
-		this.userinfo = null;
-
-		if (this.config.autologin) {
-			this.authenticate();
-
-		} else {
-			this.check();
-		}
-
-
 	};
 
-	FeideConnect.prototype.getConfig = function() {
-
-		return this.config;
-
+	var fcDocker = {
+		providerId: "feideconnect-docker",
+		authorization: "http://auth.docker.feideconnect.no:8080/oauth/authorization",
+		token: "http://auth.docker.feideconnect.no:8080/oauth/token",
+		apis: {
+			"auth": "https://auth.feideconnect.no",
+			"core": "https://api.feideconnect.no",
+			"groups": "https://groups-api.feideconnect.no"
+		}
 	};
 
 
-	FeideConnect.prototype.logout = function() {
 
-		this.jso.wipeTokens();
-		this.userinfo = null;
-		this.setAuthState(false);
+	var FeideConnect = OpenIDAuthentication.extend({
+		"init": function(config) {
+			var defaults = {
+				"autologin": false,
+				"debug": false
+			};
 
-	};
+			var that = this;
 
 
-	/**
-	 * Returns a promise that is fullfilled when the user is completed authenticated.
-	 * It will initiate authentication if the user is not already authenticated.
-	 * 
-	 * @return {[type]} [description]
-	 */
-	FeideConnect.prototype.authenticated = function() {
-		var that = this;
+			var selectedConfig = {};
+			if (config.instance && config.instance === 'dev1') {
+				selectedConfig = fcDev1;
+			}
+			if (config.instance && config.instance === 'dev') {
+				selectedConfig = fcDev;
+			}
+			if (config.instance && config.instance === 'pilot') {
+				selectedConfig = fcPilot;
+			}
+			if (config.instance && config.instance === 'docker') {
+				selectedConfig = fcDocker;
+			}
 
-		if (that.userinfo) {
+
+			var xconfig = $.extend({}, selectedConfig, defaults, config);
+
+			this._super(xconfig);
+		},
+
+		"logout": function() {
+			this._super();
+			var url = this.config.apis.auth + '/logout';
+			window.location = url;
+		},
+
+		"getUserInfo": function() {
+			return this._request('auth', '/userinfo', null, ['userinfo']);
+		},
+
+
+		"psOrgs": function(callback) {
+			var path = "peoplesearch/orgs";
+			return this._request('core', '/peoplesearch/orgs', null, ['peoplesearch'], callback);		
+		},
+
+		"psSearch": function(realm, query, callback) {
+			var path = "/peoplesearch/search/" + realm + "/" + encodeURI(query);
+			return this._request('core', path, null, ['peoplesearch'], callback);		
+		},
+
+
+		// TODO : Check what scope is really required.
+		"getMandatoryClients": function(orgid, callback) {
+			var path = "/orgs/" + orgid + "/mandatory_clients/";
+			return this._request('core', path, null, ['orgadmin'], callback);
+		},
+		"setMandatoryClient": function(orgid, clientid, callback) {
+			var path = "/orgs/" + orgid + "/mandatory_clients/";
+			var obj = clientid;
+			return this._requestObj('POST', 'core', path, null, ['orgadmin'], obj, callback);
+		},
+		"removeMandatoryClient": function(orgid, clientid, callback) {
+			var path = "/orgs/" + orgid + "/mandatory_clients/" + clientid;
+			return this._requestObj('DELETE', 'core', path, null, ['orgadmin'], null, callback);
+		},
+
+		"getClient": function(id, callback) {
+			var path = "/clientadm/clients/" + id;
+			return this._request('core', path, null, ['clientadmin'], callback);		
+		},
+
+		
+		"clientsList": function(callback) {
+			var path = "/clientadm/clients/";
+			return this._request('core', path, null, ['clientadmin'], callback);		
+		},
+
+		"clientsByScope": function(scope, callback) {
+			var path = "/clientadm/clients/?scope=" + encodeURIComponent(scope);
+			return this._request('core', path, null, ['clientadmin'], callback);		
+		},
+		
+		"clientsByOrg": function(orgid, callback) {
+			var path = "/clientadm/clients/";
+			if (orgid !== null) {
+				path += "?organization=" + encodeURIComponent(orgid);
+			}
+			return this._request('core', path, null, ['clientadmin'], callback);		
+		},
+
+		"clientsRegister": function(obj, callback) {
+			var path = "/clientadm/clients/";
+			return this._requestObj('POST', 'core', path, null, ['clientadmin'], obj, callback);
+		},
+
+		"clientsUpdate": function(obj, callback) {
+			var path = "/clientadm/clients/" + obj.id;
+			return this._requestObj('PATCH', 'core', path, null, ['clientadmin'], obj, callback);
+		},
+
+		"clientsAuthorizeAPIGKscopes": function(id, obj, callback) {
+			var path = "/clientadm/clients/" + id + "/gkscopes";
+			return this._requestObj('PATCH', 'core', path, null, ['clientadmin'], obj, callback);
+		},
+
+		"clientsDelete": function(clientid, callback) {
+			var path = "/clientadm/clients/" + clientid;
+			return this._requestObj('DELETE', 'core', path, null, ['clientadmin'], null, callback);
+		},
+
+		"clientsUpdateLogo": function(id, obj, callback) {
+			var path = "/clientadm/clients/" + id + "/logo";
+			var contenttype = obj.contenttype;
+			console.log("File content type: " + contenttype);
+			contenttype = "image/jpeg";
+			return this._requestBinary('POST', 'core', path, null, ['clientadmin'], obj, contenttype, callback);
+		},
+
+		"clientsPublicList": function(callback) {
+			var path = "/clientadm/public";
+			return this._requestPublic('core', path, callback);
+		},
+
+		"apigkList": function(callback) {
+			var path = "/apigkadm/apigks/";
+			return this._request('core', path, null, ['apigkadmin'], callback);			
+		},
+
+		"apigkListByOrg": function(orgid, callback) {
+			var path = "/apigkadm/apigks/";
+			if (orgid !== null) {
+				path += "?organization=" + encodeURIComponent(orgid);
+			}
+			return this._request('core', path, null, ['clientadmin'], callback);		
+		},
+
+		"apigkPublicList": function(callback) {
+			var path = "/apigkadm/public";
+			return this._requestPublic('core', path, callback);
+
+		},
+
+		"apigkRegister": function(obj, callback) {
+			var path = "/apigkadm/apigks/";
+			return this._requestObj('POST', 'core', path, null, ['apigkadmin'], obj, callback);
+		},
+		"apigkUpdate": function(obj, callback) {
+			var path = "/apigkadm/apigks/" + obj.id;
+			// delete obj.id;
+			// var x = {name: obj.name};
+			return this._requestObj('PATCH', 'core', path, null, ['apigkadmin'], obj, callback);	
+		},
+		"apigkDelete": function(id, callback) {
+			var path = "/apigkadm/apigks/" + id;
+			return this._requestObj('DELETE', 'core', path, null, ['apigkadmin'], null, callback);
+		},
+		"apigkUpdateLogo": function(id, obj, callback) {
+			var path = "/apigkadm/apigks/" + id + "/logo";
+			var contenttype = obj.contenttype;
+			console.log("File content type: " + contenttype);
+			contenttype = "image/jpeg";
+			return this._requestBinary('POST', 'core', path, null, ['apigkadmin'], obj, contenttype, callback);
+		},
+		"apigkCheck": function(id, callback) {
+			var path = "/apigkadm/apigks/" + id + "/exists";
+			return this._request('core', path, null, ['apigkadmin'], callback);	
+		},
+
+		"apigkClientRequests": function(callback) {
+			var owner = 'me';
+			var path = "/apigkadm/apigks/owners/" + owner + "/clients/";
+			return this._request('core', path, null, ['apigkadmin'], callback);	
+		},
+
+		"apigkClientRequestsByOrg": function(orgid, callback) {
+			var path = "/apigkadm/apigks/orgs/" + orgid + "/clients/";
+			return this._request('core', path, null, ['apigkadmin'], callback);	
+		},
+
+		"getGroups": function(callback) {
+			var path = "/adhocgroups/";
+			return this._request('core', path, null, ['adhocgroupadmin'], callback);
+		},
+
+		"getGroup": function(id, callback) {
+			var path = "/adhocgroups/" + id;
+			return this._request('core', path, null, ['adhocgroupadmin'], callback);
+		},
+
+		"getGroupInvited": function(id, token, callback) {
+			var path = "/adhocgroups/" + id + '?invitation_token=' + encodeURIComponent(token);
+			return this._request('core', path, null, ['adhocgroupadmin'], callback);
+		},
+
+		"getGroupDetails": function(id, callback) {
+			var path = "/adhocgroups/" + id + "/details";
+			return this._request('core', path, null, ['adhocgroupadmin'], callback);
+		},
+
+		"updateGroup": function(groupid, data, callback) {
+			var path = "/adhocgroups/" + groupid;
+			return this._requestObj("PATCH", 'core', path, null, ['adhocgroupadmin'], data, callback);
+		},
+
+		"addGroup": function(data, callback) {
+			var path = "/adhocgroups/";
+			return this._requestObj("POST", 'core', path, null, ['adhocgroupadmin'], data, callback);
+		},
+
+		"delGroup": function(groupid, callback) {
+			var path = "/adhocgroups/" + groupid;
+			return this._requestObj("DELETE", 'core', path, null, ['adhocgroupadmin'], null, callback);
+		},
+
+		"getGroupMembers": function(groupid, callback) {
+			var path = "/adhocgroups/" + groupid + "/members";
+			return this._request('core', path, null, ['adhocgroupadmin'], callback);
+		},
+
+		"addGroupMember": function(groupid, token, type, callback) {
+			var data = [{"token": token, "type": type}];
+			var path = "/adhocgroups/" + groupid + "/members";
+			return this._requestObj("PATCH", 'core', path, null, ['adhocgroupadmin'], data, callback);
+		},
+
+		"updateGroupMember": function(groupid, userid, type, callback) {
+			var data = [{"id": userid, "type": type}];
+			var path = "/adhocgroups/" + groupid + "/members";
+			return this._requestObj("PATCH", 'core', path, null, ['adhocgroupadmin'], data, callback);
+		},
+
+		"delGroupMember": function(groupid, userid, callback) {
+			var data = [userid];
+			var path = "/adhocgroups/" + groupid + "/members";
+			return this._requestObj("DELETE", 'core', path, null, ['adhocgroupadmin'], data, callback);
+		},
+
+		"getGroupMemberships": function(callback) {
+			var path = "/adhocgroups/memberships";
+			return this._request('core', path, null, ['adhocgroupadmin'], callback);
+		},
+
+		"confirmGroupMembership": function(groupid, callback) {
+			var path = "/adhocgroups/memberships";
+			var data = [groupid];
+			return this._requestObj("PATCH", 'core', path, null, ['adhocgroupadmin'], data, callback);
+		},
+
+
+		"joinGroupFromInvitation": function(groupid, token, callback) {
+			var path = "/adhocgroups/" + groupid + "/invitation";
+			var data = {"invitation_token": token};
+			return this._requestObj("POST", 'core', path, null, ['adhocgroupadmin'], data, callback);
+		},
+
+		"leaveGroup": function(groupid, callback) {
+			var path = "/adhocgroups/memberships";
+			var data = [groupid];
+			return this._requestObj("DELETE", 'core', path, null, ['adhocgroupadmin'], data, callback);
+		},
+
+		"vootGroupsList": function(callback) {
+			var path = "/groups/me/groups";
+			return this._request('groups', path, null, ['groups'], callback);
+		},
+		"vootGroupsPublicList": function(callback) {
+			var path = "/groups/groups";
+			return this._request('groups', path, null, ['groups'], callback);
+		},
+		"vootGrouptypes": function(callback) {
+			var path = "/groups/grouptypes";
+			return this._request('groups', path, null, ['groups'], callback);
+		},
+
+
+		"authorizationsList": function(callback) {
+			var path = "/authorizations/";
+			return this._request('core', path, null, ['authzinfo'], callback);	
+		},
+
+		"authorizationsDelete": function(id, callback) {
+			var path = "/authorizations/" + id;
+			return this._requestObj("DELETE", 'core', path, null, ['authzinfo'], null, callback);
+		},
+
+
+
+		"_requestBinary": function(method, instance, endpoint, request, require, data, contentType, callback) {
+
+			var that = this;
+			var url = this.config.apis[instance] + endpoint;
+			console.log("About to perform a JSO OAuth request to " + instance + " [" + url + "]");
+
+			var headers = {};
+
 			return new Promise(function(resolve, reject) {
-				return resolve(that.userinfo);
-			});
-		}
-
-		if (this.authenticationInProgress) {
-			return new Promise(function(resolveX, rejectX) {
-				that.callbacks.onAuthenticated.push(resolveX);
-			});
-		}
-
-		return that.authenticate();
-	};
-
-	FeideConnect.prototype.authenticate = function() {
-
-		this.authenticationInProgress = true;
-
-		var that = this;
-		return this._request('auth', '/userinfo', null, ['userinfo']).then(function(res) {
-
-			if  (res.audience !== that.config.client_id) {
-				throw new Error('Wrong audience for this token.');
-			}
-			that.userinfo = res.user;
-			that.setAuthState(true);
-
-			// console.error("Authenticated, now work with the callbacks", that.callbacks.onAuthenticated);
-
-			for(var i = 0; i < that.callbacks.onAuthenticated.length; i++) {
-				if (typeof that.callbacks.onAuthenticated[i] === 'function') {
-					that.callbacks.onAuthenticated[i](that.userinfo);
-				}
-			}
-			that.authenticationInProgress = false;
-			return res;
-		});
-	};
-
-	FeideConnect.prototype.getUserInfo = function() {
-		return this._request('auth', '/userinfo', null, ['userinfo']);
-	};
-
-
-	FeideConnect.prototype.psOrgs = function(callback) {
-		var path = "peoplesearch/orgs";
-		return this._request('core', '/peoplesearch/orgs', null, ['peoplesearch'], callback);		
-	};
-
-	FeideConnect.prototype.psSearch = function(realm, query, callback) {
-		var path = "/peoplesearch/search/" + realm + "/" + encodeURI(query);
-		return this._request('core', path, null, ['peoplesearch'], callback);		
-	};
-
-
-	// TODO : Check what scope is really required.
-	FeideConnect.prototype.getMandatoryClients = function(orgid, callback) {
-		var path = "/orgs/" + orgid + "/mandatory_clients/";
-		return this._request('core', path, null, ['orgadmin'], callback);
-	};
-	FeideConnect.prototype.setMandatoryClient = function(orgid, clientid, callback) {
-		var path = "/orgs/" + orgid + "/mandatory_clients/";
-		var obj = clientid;
-		return this._requestObj('POST', 'core', path, null, ['orgadmin'], obj, callback);
-	};
-	FeideConnect.prototype.removeMandatoryClient = function(orgid, clientid, callback) {
-		var path = "/orgs/" + orgid + "/mandatory_clients/" + clientid;
-		return this._requestObj('DELETE', 'core', path, null, ['orgadmin'], null, callback);
-	};
-
-	FeideConnect.prototype.getClient = function(id, callback) {
-		var path = "/clientadm/clients/" + id;
-		return this._request('core', path, null, ['clientadmin'], callback);		
-	};
-
-	
-	FeideConnect.prototype.clientsList = function(callback) {
-		var path = "/clientadm/clients/";
-		return this._request('core', path, null, ['clientadmin'], callback);		
-	};
-
-	FeideConnect.prototype.clientsByScope = function(scope, callback) {
-		var path = "/clientadm/clients/?scope=" + encodeURIComponent(scope);
-		return this._request('core', path, null, ['clientadmin'], callback);		
-	};
-	
-	FeideConnect.prototype.clientsByOrg = function(orgid, callback) {
-		var path = "/clientadm/clients/";
-		if (orgid !== null) {
-			path += "?organization=" + encodeURIComponent(orgid);
-		}
-		return this._request('core', path, null, ['clientadmin'], callback);		
-	};
-
-	FeideConnect.prototype.clientsRegister = function(obj, callback) {
-		var path = "/clientadm/clients/";
-		return this._requestObj('POST', 'core', path, null, ['clientadmin'], obj, callback);
-	};
-
-	FeideConnect.prototype.clientsUpdate = function(obj, callback) {
-		var path = "/clientadm/clients/" + obj.id;
-		return this._requestObj('PATCH', 'core', path, null, ['clientadmin'], obj, callback);
-	};
-
-	FeideConnect.prototype.clientsAuthorizeAPIGKscopes = function(id, obj, callback) {
-		var path = "/clientadm/clients/" + id + "/gkscopes";
-		return this._requestObj('PATCH', 'core', path, null, ['clientadmin'], obj, callback);
-	};
-
-	FeideConnect.prototype.clientsDelete = function(clientid, callback) {
-		var path = "/clientadm/clients/" + clientid;
-		return this._requestObj('DELETE', 'core', path, null, ['clientadmin'], null, callback);
-	};
-
-	FeideConnect.prototype.clientsUpdateLogo = function(id, obj, callback) {
-		var path = "/clientadm/clients/" + id + "/logo";
-		var contenttype = obj.contenttype;
-		console.log("File content type: " + contenttype);
-		contenttype = "image/jpeg";
-		return this._requestBinary('POST', 'core', path, null, ['clientadmin'], obj, contenttype, callback);
-	};
-
-	FeideConnect.prototype.clientsPublicList = function(callback) {
-		var path = "/clientadm/public";
-		return this._requestPublic('core', path, callback);
-	};
-
-	FeideConnect.prototype.apigkList = function(callback) {
-		var path = "/apigkadm/apigks/";
-		return this._request('core', path, null, ['apigkadmin'], callback);			
-	};
-
-	FeideConnect.prototype.apigkListByOrg = function(orgid, callback) {
-		var path = "/apigkadm/apigks/";
-		if (orgid !== null) {
-			path += "?organization=" + encodeURIComponent(orgid);
-		}
-		return this._request('core', path, null, ['clientadmin'], callback);		
-	};
-
-	FeideConnect.prototype.apigkPublicList = function(callback) {
-		var path = "/apigkadm/public";
-		return this._requestPublic('core', path, callback);
-
-	};
-
-	FeideConnect.prototype.apigkRegister = function(obj, callback) {
-		var path = "/apigkadm/apigks/";
-		return this._requestObj('POST', 'core', path, null, ['apigkadmin'], obj, callback);
-	};
-	FeideConnect.prototype.apigkUpdate = function(obj, callback) {
-		var path = "/apigkadm/apigks/" + obj.id;
-		// delete obj.id;
-		// var x = {name: obj.name};
-		return this._requestObj('PATCH', 'core', path, null, ['apigkadmin'], obj, callback);	
-	};
-	FeideConnect.prototype.apigkDelete = function(id, callback) {
-		var path = "/apigkadm/apigks/" + id;
-		return this._requestObj('DELETE', 'core', path, null, ['apigkadmin'], null, callback);
-	};
-	FeideConnect.prototype.apigkUpdateLogo = function(id, obj, callback) {
-		var path = "/apigkadm/apigks/" + id + "/logo";
-		var contenttype = obj.contenttype;
-		console.log("File content type: " + contenttype);
-		contenttype = "image/jpeg";
-		return this._requestBinary('POST', 'core', path, null, ['apigkadmin'], obj, contenttype, callback);
-	};
-	FeideConnect.prototype.apigkCheck = function(id, callback) {
-		var path = "/apigkadm/apigks/" + id + "/exists";
-		return this._request('core', path, null, ['apigkadmin'], callback);	
-	};
-
-	FeideConnect.prototype.apigkClientRequests = function(callback) {
-		var owner = 'me';
-		var path = "/apigkadm/apigks/owners/" + owner + "/clients/";
-		return this._request('core', path, null, ['apigkadmin'], callback);	
-	};
-
-	FeideConnect.prototype.apigkClientRequestsByOrg = function(orgid, callback) {
-		var path = "/apigkadm/apigks/orgs/" + orgid + "/clients/";
-		return this._request('core', path, null, ['apigkadmin'], callback);	
-	};
-
-	FeideConnect.prototype.getGroups = function(callback) {
-		var path = "/adhocgroups/";
-		return this._request('core', path, null, ['adhocgroupadmin'], callback);
-	};
-
-	FeideConnect.prototype.getGroup = function(id, callback) {
-		var path = "/adhocgroups/" + id;
-		return this._request('core', path, null, ['adhocgroupadmin'], callback);
-	};
-
-	FeideConnect.prototype.getGroupInvited = function(id, token, callback) {
-		var path = "/adhocgroups/" + id + '?invitation_token=' + encodeURIComponent(token);
-		return this._request('core', path, null, ['adhocgroupadmin'], callback);
-	};
-
-	FeideConnect.prototype.getGroupDetails = function(id, callback) {
-		var path = "/adhocgroups/" + id + "/details";
-		return this._request('core', path, null, ['adhocgroupadmin'], callback);
-	};
-
-	FeideConnect.prototype.updateGroup = function(groupid, data, callback) {
-		var path = "/adhocgroups/" + groupid;
-		return this._requestObj("PATCH", 'core', path, null, ['adhocgroupadmin'], data, callback);
-	};
-
-	FeideConnect.prototype.addGroup = function(data, callback) {
-		var path = "/adhocgroups/";
-		return this._requestObj("POST", 'core', path, null, ['adhocgroupadmin'], data, callback);
-	};
-
-	FeideConnect.prototype.delGroup = function(groupid, callback) {
-		var path = "/adhocgroups/" + groupid;
-		return this._requestObj("DELETE", 'core', path, null, ['adhocgroupadmin'], null, callback);
-	};
-
-	FeideConnect.prototype.getGroupMembers = function(groupid, callback) {
-		var path = "/adhocgroups/" + groupid + "/members";
-		return this._request('core', path, null, ['adhocgroupadmin'], callback);
-	};
-
-	FeideConnect.prototype.addGroupMember = function(groupid, token, type, callback) {
-		var data = [{"token": token, "type": type}];
-		var path = "/adhocgroups/" + groupid + "/members";
-		return this._requestObj("PATCH", 'core', path, null, ['adhocgroupadmin'], data, callback);
-	};
-
-	FeideConnect.prototype.updateGroupMember = function(groupid, userid, type, callback) {
-		var data = [{"id": userid, "type": type}];
-		var path = "/adhocgroups/" + groupid + "/members";
-		return this._requestObj("PATCH", 'core', path, null, ['adhocgroupadmin'], data, callback);
-	};
-
-	FeideConnect.prototype.delGroupMember = function(groupid, userid, callback) {
-		var data = [userid];
-		var path = "/adhocgroups/" + groupid + "/members";
-		return this._requestObj("DELETE", 'core', path, null, ['adhocgroupadmin'], data, callback);
-	};
-
-	FeideConnect.prototype.getGroupMemberships = function(callback) {
-		var path = "/adhocgroups/memberships";
-		return this._request('core', path, null, ['adhocgroupadmin'], callback);
-	};
-
-	FeideConnect.prototype.confirmGroupMembership = function(groupid, callback) {
-		var path = "/adhocgroups/memberships";
-		var data = [groupid];
-		return this._requestObj("PATCH", 'core', path, null, ['adhocgroupadmin'], data, callback);
-	};
-
-
-	FeideConnect.prototype.joinGroupFromInvitation = function(groupid, token, callback) {
-		var path = "/adhocgroups/" + groupid + "/invitation";
-		var data = {"invitation_token": token};
-		return this._requestObj("POST", 'core', path, null, ['adhocgroupadmin'], data, callback);
-	};
-
-	FeideConnect.prototype.leaveGroup = function(groupid, callback) {
-		var path = "/adhocgroups/memberships";
-		var data = [groupid];
-		return this._requestObj("DELETE", 'core', path, null, ['adhocgroupadmin'], data, callback);
-	};
-
-	FeideConnect.prototype.vootGroupsList = function(callback) {
-		var path = "/groups/me/groups";
-		return this._request('groups', path, null, ['groups'], callback);
-	};
-	FeideConnect.prototype.vootGroupsPublicList = function(callback) {
-		var path = "/groups/groups";
-		return this._request('groups', path, null, ['groups'], callback);
-	};
-	FeideConnect.prototype.vootGrouptypes = function(callback) {
-		var path = "/groups/grouptypes";
-		return this._request('groups', path, null, ['groups'], callback);
-	};
-
-
-	FeideConnect.prototype.authorizationsList = function(callback) {
-		var path = "/authorizations/";
-		return this._request('core', path, null, ['authzinfo'], callback);	
-	};
-
-	FeideConnect.prototype.authorizationsDelete = function(id, callback) {
-		var path = "/authorizations/" + id;
-		return this._requestObj("DELETE", 'core', path, null, ['authzinfo'], null, callback);
-	};
-
-
-	FeideConnect.prototype.setAuthState = function(ns) {
-
-		if (this.authState === ns) { return; }
-
-		this.authState = ns;
-		if (typeof this.callbacks.onStateChange === 'function') {
-			this.callbacks.onStateChange(this.authState, this.userinfo);
-		}
-
-	};
-
-	FeideConnect.prototype.onStateChange = function(callback) {
-		this.callbacks.onStateChange = callback;
-	};
-
-
-
-
-	FeideConnect.prototype._requestBinary = function(method, instance, endpoint, request, require, data, contentType, callback) {
-
-		var that = this;
-		var url = this.config.apis[instance] + endpoint;
-		console.log("About to perform a JSO OAuth request to " + instance + " [" + url + "]");
-
-		var headers = {};
-
-		return new Promise(function(resolve, reject) {
-			that.jso.ajax({
-				url: url,
-				type: method,
-				data: data,
-				contentType: contentType,
-				processData: false,
-				headers: headers,
-				oauth: {
-					scopes: {
-						request: request,
-						require: require
+				that.jso.ajax({
+					url: url,
+					type: method,
+					data: data,
+					contentType: contentType,
+					processData: false,
+					headers: headers,
+					oauth: {
+						scopes: {
+							request: request,
+							require: require
+						}
+					},
+					success: function(data) {
+						if (typeof callback === 'function') { callback(data); }
+						resolve(data);
+					},
+					error: function(jqXHR, text, error) {
+						var str = 'HTTP status (' + error + '), JSO error on [' + endpoint + '] ' + text + '';
+						if (jqXHR.hasOwnProperty("responseText") && typeof jqXHR.responseText === 'string') {
+							try {
+								var xmsg = JSON.parse(jqXHR.responseText);
+								if (xmsg.hasOwnProperty("message")) {
+									str = xmsg.message + " \n(" + str + ")";
+								}
+							} catch(err) {}
+						}
+						reject(new Error(str));
 					}
-				},
-				success: function(data) {
-					if (typeof callback === 'function') { callback(data); }
-					resolve(data);
-				},
-				error: function(jqXHR, text, error) {
-					var str = 'HTTP status (' + error + '), JSO error on [' + endpoint + '] ' + text + '';
-					if (jqXHR.hasOwnProperty("responseText") && typeof jqXHR.responseText === 'string') {
-						try {
-							var xmsg = JSON.parse(jqXHR.responseText);
-							if (xmsg.hasOwnProperty("message")) {
-								str = xmsg.message + " \n(" + str + ")";
-							}
-						} catch(err) {}
-					}
-					reject(new Error(str));
-				}
-			});
-		});
-
-
-	};
-
-
-	FeideConnect.prototype._requestObj = function(method, instance, endpoint, request, require, data, callback) {
-
-		var that = this;
-		var url = this.config.apis[instance] + endpoint;
-		console.log("About to perform a JSO OAuth request to " + instance + " [" + url + "]");
-
-		return new Promise(function(resolve, reject) {
-			that.jso.ajax({
-				url: url,
-				type: method,
-				data: JSON.stringify(data, undefined, 2),
-				contentType: 'application/json; charset=UTF-8',
-				oauth: {
-					scopes: {
-						request: request,
-						require: require
-					}
-				},
-				dataType: 'json',
-				success: function(data) {
-					if (typeof callback === 'function') { callback(data); }
-					resolve(data);
-				},
-				error: function(jqXHR, text, error) {
-					var str = 'HTTP status (' + error + '), JSO error on [' + endpoint + '] ' + text + '';
-					if (jqXHR.hasOwnProperty("responseText") && typeof jqXHR.responseText === 'string') {
-						try {
-							var xmsg = JSON.parse(jqXHR.responseText);
-							if (xmsg.hasOwnProperty("message")) {
-								str = xmsg.message + " \n(" + str + ")";
-							}
-						} catch(err) {}
-					}
-					reject(new Error(str));
-				}
-			});
-		});
-	};
-
-
-	FeideConnect.prototype._customRequest = function(url, request, require, callback) {
-		var that = this;
-		console.log("About to perform a JSO OAuth request to [" + url + "]");
-		return new Promise(function(resolve, reject) {
-			that.jso.ajax({
-				url: url,
-				oauth: {
-					scopes: {
-						request: request,
-						require: require
-					}
-				},
-				dataType: 'json',
-				success: function(data) {
-					if (typeof callback === 'function') { callback(data); }
-					resolve(data);
-				},
-				error: function(jqXHR, text, error) {
-					var str = 'HTTP status (' + error + '), JSO error on [' + url + '] ' + text + '';
-					if (jqXHR.hasOwnProperty("responseText") && typeof jqXHR.responseText === 'string') {
-						try {
-							var xmsg = JSON.parse(jqXHR.responseText);
-							if (xmsg.hasOwnProperty("message")) {
-								str = xmsg.message + " \n(" + str + ")";
-							}
-						} catch(err) {}
-					}
-					reject(new Error(str));
-				}
+				});
 			});
 
-		});
-	};
+
+		},
+
+		"_requestObj": function(method, instance, endpoint, request, require, data, callback, inOptions) {
+
+			var that = this;
+			var options = inOptions || {};
+			options.url = this.config.apis[instance] + endpoint;
+			options.type = method;
+			console.log("About to perform a JSO OAuth request to " + instance + " [" + options.url + "]");
+			return this.jso.request(options);
+
+		},
 
 
 
-	FeideConnect.prototype._request = function(instance, endpoint, request, require, callback) {
 
-		var that = this;
-		var url = this.config.apis[instance] + endpoint;
-		console.log("About to perform a JSO OAuth request to " + instance + " [" + url + "]");
-		return new Promise(function(resolve, reject) {
-			that.jso.ajax({
-				url: url,
-				oauth: {
-					scopes: {
-						request: request,
-						require: require
+
+		// 	return new Promise(function(resolve, reject) {
+		// 		that.jso.ajax({
+		// 			url: url,
+		// 			type: method,
+		// 			data: JSON.stringify(data, undefined, 2),
+		// 			contentType: 'application/json; charset=UTF-8',
+		// 			oauth: {
+		// 				scopes: {
+		// 					request: request,
+		// 					require: require
+		// 				}
+		// 			},
+		// 			dataType: 'json',
+		// 			success: function(data) {
+		// 				if (typeof callback === 'function') { callback(data); }
+		// 				resolve(data);
+		// 			},
+		// 			error: function(jqXHR, text, error) {
+		// 				var str = 'HTTP status (' + error + '), JSO error on [' + endpoint + '] ' + text + '';
+		// 				if (jqXHR.hasOwnProperty("responseText") && typeof jqXHR.responseText === 'string') {
+		// 					try {
+		// 						var xmsg = JSON.parse(jqXHR.responseText);
+		// 						if (xmsg.hasOwnProperty("message")) {
+		// 							str = xmsg.message + " \n(" + str + ")";
+		// 						}
+		// 					} catch(err) {}
+		// 				}
+		// 				reject(new Error(str));
+		// 			}
+		// 		});
+		// 	});
+		// },
+
+
+		"_customRequest": function(url, request, require, callback) {
+			var that = this;
+			console.log("About to perform a JSO OAuth request to [" + url + "]");
+			return new Promise(function(resolve, reject) {
+				that.jso.ajax({
+					url: url,
+					oauth: {
+						scopes: {
+							request: request,
+							require: require
+						}
+					},
+					dataType: 'json',
+					success: function(data) {
+						if (typeof callback === 'function') { callback(data); }
+						resolve(data);
+					},
+					error: function(jqXHR, text, error) {
+						var str = 'HTTP status (' + error + '), JSO error on [' + url + '] ' + text + '';
+						if (jqXHR.hasOwnProperty("responseText") && typeof jqXHR.responseText === 'string') {
+							try {
+								var xmsg = JSON.parse(jqXHR.responseText);
+								if (xmsg.hasOwnProperty("message")) {
+									str = xmsg.message + " \n(" + str + ")";
+								}
+							} catch(err) {}
+						}
+						reject(new Error(str));
 					}
-				},
-				dataType: 'json',
-				success: function(data) {
-					if (typeof callback === 'function') { callback(data); }
-					resolve(data);
-				},
-				error: function(jqXHR, text, error) {
-					var str = 'HTTP status (' + error + '), JSO error on [' + endpoint + '] ' + text + '';
-					if (jqXHR.hasOwnProperty("responseText") && typeof jqXHR.responseText === 'string') {
-						try {
-							var xmsg = JSON.parse(jqXHR.responseText);
-							if (xmsg.hasOwnProperty("message")) {
-								str = xmsg.message + " \n(" + str + ")";
-							}
-						} catch(err) {}
-					}
-					reject(new Error(str));
-				}
+				});
+
 			});
+		},
 
-		});
 
-	};
 
-	FeideConnect.prototype._requestPublic = function(instance, endpoint, callback) {
+		"_request": function(instance, endpoint, request, require, callback, inOptions) {
+			var options = inOptions || {};
+			options.url = this.config.apis[instance] + endpoint;
+			console.log("About to perform a JSO OAuth request to " + instance + " [" + options.url + "]");
+			return this.jso.request(options);
+		},
 
-		var that = this;
-		var url = this.config.apis[instance] + endpoint;
-		console.log("About to perform a public request to " + instance + " [" + url + "]");
-		return new Promise(function(resolve, reject) {
-			$.ajax({
-				url: url,
-				dataType: 'json',
-				success: function(data) {
-					if (typeof callback === 'function') { callback(data); }
-					resolve(data);
-				},
-				error: function(jqXHR, text, error) {
-					var str = 'HTTP status (' + error + '), JSO error on [' + endpoint + '] ' + text + '';
-					if (jqXHR.hasOwnProperty("responseText") && typeof jqXHR.responseText === 'string') {
-						try {
-							var xmsg = JSON.parse(jqXHR.responseText);
-							if (xmsg.hasOwnProperty("message")) {
-								str = xmsg.message + " \n(" + str + ")";
-							}
-						} catch(err) {}
+		"_requestPublic": function(instance, endpoint, callback) {
+
+			var that = this;
+			var url = this.config.apis[instance] + endpoint;
+			console.log("About to perform a public request to " + instance + " [" + url + "]");
+			return new Promise(function(resolve, reject) {
+				$.ajax({
+					url: url,
+					dataType: 'json',
+					success: function(data) {
+						if (typeof callback === 'function') { callback(data); }
+						resolve(data);
+					},
+					error: function(jqXHR, text, error) {
+						var str = 'HTTP status (' + error + '), JSO error on [' + endpoint + '] ' + text + '';
+						if (jqXHR.hasOwnProperty("responseText") && typeof jqXHR.responseText === 'string') {
+							try {
+								var xmsg = JSON.parse(jqXHR.responseText);
+								if (xmsg.hasOwnProperty("message")) {
+									str = xmsg.message + " \n(" + str + ")";
+								}
+							} catch(err) {}
+						}
+						reject(new Error(str));
 					}
-					reject(new Error(str));
-				}
+				});
 			});
-		});
-	};
+		},
+
+	});
+
+
+
+	// /**
+	//  * Returns a promise that is fullfilled when the user is completed authenticated.
+	//  * It will initiate authentication if the user is not already authenticated.
+	//  * 
+	//  * @return {[type]} [description]
+	//  */
+	// "authenticated": function() {
+	// 	var that = this;
+
+	// 	if (that.userinfo) {
+	// 		return new Promise(function(resolve, reject) {
+	// 			return resolve(that.userinfo);
+	// 		});
+	// 	}
+
+	// 	if (this.authenticationInProgress) {
+	// 		return new Promise(function(resolveX, rejectX) {
+	// 			that.callbacks.onAuthenticated.push(resolveX);
+	// 		});
+	// 	}
+
+	// 	return that.authenticate();
+	// },
 
 
 
 
-	FeideConnect.prototype.check = function() {
-
-		console.log("JSO LOAded", this.jso);
-		var token = this.jso.checkToken({
-			"scopes": {
-				"require": ["userinfo"]
-			}
-		});
-
-		if (token) {
-			console.log("Check for token YES");
-			this.authenticate();
-		} else {
-			console.log("Check for token NO");
-		}
 
 
-	};
+
+
 
 
 	exports.FeideConnect = FeideConnect;
