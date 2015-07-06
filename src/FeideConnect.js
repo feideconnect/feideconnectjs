@@ -344,97 +344,48 @@ define(function(require, exports, module) {
 
 
 
-		"_requestBinary": function(method, instance, endpoint, request, require, data, contentType, callback) {
-
-			var that = this;
-			var url = this.config.apis[instance] + endpoint;
-			console.log("About to perform a JSO OAuth request to " + instance + " [" + url + "]");
-
-			var headers = {};
-
-			return new Promise(function(resolve, reject) {
-				that.jso.ajax({
-					url: url,
-					type: method,
-					data: data,
-					contentType: contentType,
-					processData: false,
-					headers: headers,
-					oauth: {
-						scopes: {
-							request: request,
-							require: require
-						}
-					},
-					success: function(data) {
-						if (typeof callback === 'function') { callback(data); }
-						resolve(data);
-					},
-					error: function(jqXHR, text, error) {
-						var str = 'HTTP status (' + error + '), JSO error on [' + endpoint + '] ' + text + '';
-						if (jqXHR.hasOwnProperty("responseText") && typeof jqXHR.responseText === 'string') {
-							try {
-								var xmsg = JSON.parse(jqXHR.responseText);
-								if (xmsg.hasOwnProperty("message")) {
-									str = xmsg.message + " \n(" + str + ")";
-								}
-							} catch(err) {}
-						}
-						reject(new Error(str));
-					}
-				});
-			});
 
 
+		/*
+		 * Section on implementing OAUth based requests...
+		 */
+
+
+
+
+
+		"_request": function(instance, endpoint, request, require, callback, inOptions) {
+			var options = inOptions || {};
+			options.url = this.config.apis[instance] + endpoint;
+			console.log("About to perform a JSO OAuth request to " + instance + " [" + options.url + "]");
+			return this.jso.request(options);
 		},
 
-		"_requestObj": function(method, instance, endpoint, request, require, data, callback, inOptions) {
 
-			var that = this;
+		"_requestObj": function(method, instance, endpoint, request, require, data, callback, inOptions) {
 			var options = inOptions || {};
 			options.url = this.config.apis[instance] + endpoint;
 			options.type = method;
+			options.data = JSON.stringify(data, undefined, 2);
+			options.contentType = 'application/json; charset=UTF-8';
 			console.log("About to perform a JSO OAuth request to " + instance + " [" + options.url + "]");
 			return this.jso.request(options);
-
 		},
 
 
 
 
+		"_requestBinary": function(method, instance, endpoint, request, require, data, contentType, callback, inOptions) {
 
-		// 	return new Promise(function(resolve, reject) {
-		// 		that.jso.ajax({
-		// 			url: url,
-		// 			type: method,
-		// 			data: JSON.stringify(data, undefined, 2),
-		// 			contentType: 'application/json; charset=UTF-8',
-		// 			oauth: {
-		// 				scopes: {
-		// 					request: request,
-		// 					require: require
-		// 				}
-		// 			},
-		// 			dataType: 'json',
-		// 			success: function(data) {
-		// 				if (typeof callback === 'function') { callback(data); }
-		// 				resolve(data);
-		// 			},
-		// 			error: function(jqXHR, text, error) {
-		// 				var str = 'HTTP status (' + error + '), JSO error on [' + endpoint + '] ' + text + '';
-		// 				if (jqXHR.hasOwnProperty("responseText") && typeof jqXHR.responseText === 'string') {
-		// 					try {
-		// 						var xmsg = JSON.parse(jqXHR.responseText);
-		// 						if (xmsg.hasOwnProperty("message")) {
-		// 							str = xmsg.message + " \n(" + str + ")";
-		// 						}
-		// 					} catch(err) {}
-		// 				}
-		// 				reject(new Error(str));
-		// 			}
-		// 		});
-		// 	});
-		// },
+			var options = inOptions || {};
+			options.url = this.config.apis[instance] + endpoint;
+			options.type = method;
+			options.data = data;
+			options.contentType = contentType;
+			console.log("About to perform a JSO OAuth request to " + instance + " [" + options.url + "]");
+			return this.jso.request(options);
+		},
+
 
 
 		"_customRequest": function(url, request, require, callback) {
@@ -473,13 +424,6 @@ define(function(require, exports, module) {
 
 
 
-		"_request": function(instance, endpoint, request, require, callback, inOptions) {
-			var options = inOptions || {};
-			options.url = this.config.apis[instance] + endpoint;
-			console.log("About to perform a JSO OAuth request to " + instance + " [" + options.url + "]");
-			return this.jso.request(options);
-		},
-
 		"_requestPublic": function(instance, endpoint, callback) {
 
 			var that = this;
@@ -507,41 +451,9 @@ define(function(require, exports, module) {
 					}
 				});
 			});
-		},
+		}
 
 	});
-
-
-
-	// /**
-	//  * Returns a promise that is fullfilled when the user is completed authenticated.
-	//  * It will initiate authentication if the user is not already authenticated.
-	//  * 
-	//  * @return {[type]} [description]
-	//  */
-	// "authenticated": function() {
-	// 	var that = this;
-
-	// 	if (that.userinfo) {
-	// 		return new Promise(function(resolve, reject) {
-	// 			return resolve(that.userinfo);
-	// 		});
-	// 	}
-
-	// 	if (this.authenticationInProgress) {
-	// 		return new Promise(function(resolveX, rejectX) {
-	// 			that.callbacks.onAuthenticated.push(resolveX);
-	// 		});
-	// 	}
-
-	// 	return that.authenticate();
-	// },
-
-
-
-
-
-
 
 
 
