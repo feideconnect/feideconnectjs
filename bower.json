@@ -8,6 +8,7 @@
 	"homepage": "http://feideconnect.no",
 	"main": "src/FeideConnect.js",
 	"private": true,
+  "license": "LGPL 2.1",
 	"ignore": [
 		"**/.*",
 		"node_modules",
@@ -15,6 +16,13 @@
 		"test",
 		"tests"
 	],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
 	"dependencies": {
 		"jso": "version3"
 	}
