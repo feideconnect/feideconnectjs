@@ -8,7 +8,6 @@ define(function(require, exports, module) {
 		$ = require('jquery');
 		
 
-	JSO.enablejQuery($);
 
 
 	var fcDev1 = {
@@ -167,12 +166,13 @@ define(function(require, exports, module) {
 			return this._requestObj('DELETE', 'core', path, null, ['clientadmin'], null, callback);
 		},
 
-		"clientsUpdateLogo": function(id, obj, callback) {
+		"clientsUpdateLogo": function(id, obj) {
 			var path = "/clientadm/clients/" + id + "/logo";
-			var contenttype = obj.contenttype;
-			console.log("File content type: " + contenttype);
-			contenttype = "image/jpeg";
-			return this._requestBinary('POST', 'core', path, null, ['clientadmin'], obj, contenttype, callback);
+			var contenttype = "image/jpeg";
+			if (obj.type) {
+				contenttype = obj.type;
+			}
+			return this._requestBinary('POST', 'core', path, null, ['clientadmin'], obj, contenttype);
 		},
 
 		"clientsPublicList": function(callback) {
@@ -374,7 +374,7 @@ define(function(require, exports, module) {
 
 
 
-
+		// this._requestBinary('POST', 'core', path, null, ['clientadmin'], obj, contenttype);
 		"_requestBinary": function(method, instance, endpoint, request, require, data, contentType, callback, inOptions) {
 
 			var options = inOptions || {};
@@ -382,7 +382,8 @@ define(function(require, exports, module) {
 			options.type = method;
 			options.data = data;
 			options.contentType = contentType;
-			console.log("About to perform a JSO OAuth request to " + instance + " [" + options.url + "]");
+			options.processData = false;
+			// console.log("About to perform a JSO OAuth request to " + instance, options);
 			return this.jso.request(options);
 		},
 
