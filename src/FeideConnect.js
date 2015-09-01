@@ -176,7 +176,7 @@ define(function(require, exports, module) {
 		},
 
 		"clientsPublicList": function(callback) {
-			var path = "/clientadm/public";
+			var path = "/clientadm/public/";
 			return this._requestPublic('core', path, callback);
 		},
 
@@ -194,7 +194,7 @@ define(function(require, exports, module) {
 		},
 
 		"apigkPublicList": function(callback) {
-			var path = "/apigkadm/public";
+			var path = "/apigkadm/public/";
 			return this._requestPublic('core', path, callback);
 
 		},
