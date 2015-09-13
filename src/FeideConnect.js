@@ -391,8 +391,8 @@ define(function(require, exports, module) {
 		"_customRequest": function(url, request, require, callback) {
 			var that = this;
 			console.log("About to perform a JSO OAuth request to [" + url + "]");
-			return new Promise(function(resolve, reject) {
-				that.jso.ajax({
+
+			return this.jso.ajax({
 					url: url,
 					oauth: {
 						scopes: {
@@ -400,26 +400,8 @@ define(function(require, exports, module) {
 							require: require
 						}
 					},
-					dataType: 'json',
-					success: function(data) {
-						if (typeof callback === 'function') { callback(data); }
-						resolve(data);
-					},
-					error: function(jqXHR, text, error) {
-						var str = 'HTTP status (' + error + '), JSO error on [' + url + '] ' + text + '';
-						if (jqXHR.hasOwnProperty("responseText") && typeof jqXHR.responseText === 'string') {
-							try {
-								var xmsg = JSON.parse(jqXHR.responseText);
-								if (xmsg.hasOwnProperty("message")) {
-									str = xmsg.message + " \n(" + str + ")";
-								}
-							} catch(err) {}
-						}
-						reject(new Error(str));
-					}
+					dataType: 'json'
 				});
-
-			});
 		},
 
 
