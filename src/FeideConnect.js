@@ -58,7 +58,6 @@ define(function(require, exports, module) {
 	var FeideConnect = OpenIDAuthentication.extend({
 		"init": function(config) {
 			var defaults = {
-				"autologin": false,
 				"debug": false
 			};
 
