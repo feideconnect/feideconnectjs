@@ -16,9 +16,11 @@ define(function(require, exports, module) {
 		token: "https://auth.dev.feideconnect.no/oauth/token",
 		apis: {
 			"auth": "https://auth.dev.feideconnect.no",
-			"core": "http://api.dev.feideconnect.no:6543",
-			"groups": "http://api.dev.feideconnect.no:7654"
-		}
+			"core": "https://api.dev.feideconnect.no",
+			"groups": "https://groups-api.dev.feideconnect.no"
+		},
+
+		"debug": false
 	};
 	var fcDev = {
 		providerId: "feideconnect-dev",
@@ -120,6 +122,15 @@ define(function(require, exports, module) {
 			var path = "/orgs/" + orgid + "/mandatory_clients/" + clientid;
 			return this._requestObj('DELETE', 'core', path, null, ['orgadmin'], null, callback);
 		},
+
+
+
+		"getOrgTargetedAPIs": function(orgid) {
+			var path = '/clientadm/realmclients/targetrealm/' + orgid + '/';
+			return this._request('core', path, null, ['orgadmin']);
+		},
+
+
 
 		"getClient": function(id, callback) {
 			var path = "/clientadm/clients/" + id;
