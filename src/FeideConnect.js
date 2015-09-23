@@ -130,6 +130,12 @@ define(function(require, exports, module) {
 			return this._request('core', path, null, ['orgadmin']);
 		},
 
+		"updateOrgAuthorizations": function(realm, clientid, data) {
+			var path = '/clientadm/clients/' + clientid + '/orgauthorization/' + realm;
+			return this._requestObj("PATCH", 'core', path, null, ['orgadmin'], data);
+		},
+
+
 
 
 		"getClient": function(id, callback) {
@@ -350,6 +356,7 @@ define(function(require, exports, module) {
 		"authorizationsDelete": function(id, callback) {
 			var path = "/authorizations/" + id;
 			return this._requestObj("DELETE", 'core', path, null, ['authzinfo'], null, callback);
+
 		},
 
 
