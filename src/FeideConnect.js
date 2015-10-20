@@ -389,7 +389,10 @@ define(function(require, exports, module) {
 		"_request": function(instance, endpoint, request, require, callback, inOptions) {
 			var options = inOptions || {};
 			options.url = this.config.apis[instance] + endpoint;
-			console.log("About to perform a JSO OAuth request to " + instance + " [" + options.url + "]");
+			if (this.config.debug) {
+				console.log("About to perform a JSO OAuth request to " + instance + " [" + options.url + "]");	
+			}
+			
 			return this.jso.request(options);
 		},
 
@@ -400,7 +403,9 @@ define(function(require, exports, module) {
 			options.type = method;
 			options.data = JSON.stringify(data, undefined, 2);
 			options.contentType = 'application/json; charset=UTF-8';
-			console.log("About to perform a JSO OAuth request to " + instance + " [" + options.url + "]");
+			if (this.config.debug) {
+				console.log("About to perform a JSO OAuth request to " + instance + " [" + options.url + "]");
+			}
 			return this.jso.request(options);
 		},
 
@@ -443,7 +448,9 @@ define(function(require, exports, module) {
 
 			var that = this;
 			var url = this.config.apis[instance] + endpoint;
-			console.log("About to perform a public request to " + instance + " [" + url + "]");
+			if (this.config.debug) {
+				console.log("About to perform a public request to " + instance + " [" + url + "]");
+			}
 			return new Promise(function(resolve, reject) {
 				$.ajax({
 					url: url,
