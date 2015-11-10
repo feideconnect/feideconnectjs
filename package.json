@@ -1,6 +1,6 @@
 {
 	"name": "feideconnectjs",
-	"version": "2.0.1",
+	"version": "2.0.2",
 	"description": "Feide Connect Javascript Library",
 	"devDependencies": {
 		"grunt": "~0.4.5",
