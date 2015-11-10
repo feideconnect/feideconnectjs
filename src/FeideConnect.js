@@ -2,11 +2,10 @@ define(function(require, exports, module) {
 
 	"use strict";
 
-	var 
+	var
 		JSO = require('bower/jso/src/jso'),
 		OpenIDAuthentication = require('bower/jso/src/Authentication/OpenIDAuthentication'),
 		$ = require('jquery');
-		
 
 
 
@@ -43,7 +42,8 @@ define(function(require, exports, module) {
 			"core": "https://api.feideconnect.no",
 			"groups": "https://groups-api.dev.feideconnect.no"
 		},
-		"debug": false
+		"debug": false,
+		userInfo: "https://auth.dev.feideconnect.no/userinfo"
 	};
 	var fcPilot = {
 		providerId: "feideconnect-pilot",
@@ -53,18 +53,8 @@ define(function(require, exports, module) {
 			"auth": "https://auth.feideconnect.no",
 			"core": "https://api.feideconnect.no",
 			"groups": "https://groups-api.feideconnect.no"
-		}
-	};
-
-	var fcDocker = {
-		providerId: "feideconnect-docker",
-		authorization: "http://auth.docker.feideconnect.no:8080/oauth/authorization",
-		token: "http://auth.docker.feideconnect.no:8080/oauth/token",
-		apis: {
-			"auth": "https://auth.feideconnect.no",
-			"core": "https://api.feideconnect.no",
-			"groups": "https://groups-api.feideconnect.no"
-		}
+		},
+		userInfo: "https://auth.feideconnect.no/userinfo"
 	};
 
 
@@ -91,9 +81,7 @@ define(function(require, exports, module) {
 			if (config.instance && config.instance === 'pilot') {
 				selectedConfig = fcPilot;
 			}
-			if (config.instance && config.instance === 'docker') {
-				selectedConfig = fcDocker;
-			}
+
 
 
 			var xconfig = $.extend({}, selectedConfig, defaults, config);
@@ -114,12 +102,12 @@ define(function(require, exports, module) {
 
 		"psOrgs": function(callback) {
 			var path = "peoplesearch/orgs";
-			return this._request('core', '/peoplesearch/orgs', null, ['peoplesearch'], callback);		
+			return this._request('core', '/peoplesearch/orgs', null, ['peoplesearch'], callback);
 		},
 
 		"psSearch": function(realm, query, callback) {
 			var path = "/peoplesearch/search/" + realm + "/" + encodeURI(query);
-			return this._request('core', path, null, ['peoplesearch'], callback);		
+			return this._request('core', path, null, ['peoplesearch'], callback);
 		},
 
 
@@ -152,29 +140,28 @@ define(function(require, exports, module) {
 
 
 
-
 		"getClient": function(id, callback) {
 			var path = "/clientadm/clients/" + id;
-			return this._request('core', path, null, ['clientadmin'], callback);		
+			return this._request('core', path, null, ['clientadmin'], callback);
 		},
 
-		
+
 		"clientsList": function(callback) {
 			var path = "/clientadm/clients/";
-			return this._request('core', path, null, ['clientadmin'], callback);		
+			return this._request('core', path, null, ['clientadmin'], callback);
 		},
 
 		"clientsByScope": function(scope, callback) {
 			var path = "/clientadm/clients/?scope=" + encodeURIComponent(scope);
-			return this._request('core', path, null, ['clientadmin'], callback);		
+			return this._request('core', path, null, ['clientadmin'], callback);
 		},
-		
+
 		"clientsByOrg": function(orgid, callback) {
 			var path = "/clientadm/clients/";
 			if (orgid !== null) {
 				path += "?organization=" + encodeURIComponent(orgid);
 			}
-			return this._request('core', path, null, ['clientadmin'], callback);		
+			return this._request('core', path, null, ['clientadmin'], callback);
 		},
 
 		"clientsRegister": function(obj, callback) {
@@ -213,7 +200,7 @@ define(function(require, exports, module) {
 
 		"apigkList": function(callback) {
 			var path = "/apigkadm/apigks/";
-			return this._request('core', path, null, ['apigkadmin'], callback);			
+			return this._request('core', path, null, ['apigkadmin'], callback);
 		},
 
 		"apigkListByOrg": function(orgid, callback) {
@@ -221,7 +208,7 @@ define(function(require, exports, module) {
 			if (orgid !== null) {
 				path += "?organization=" + encodeURIComponent(orgid);
 			}
-			return this._request('core', path, null, ['clientadmin'], callback);		
+			return this._request('core', path, null, ['clientadmin'], callback);
 		},
 
 		"apigkPublicList": function(callback) {
@@ -238,7 +225,7 @@ define(function(require, exports, module) {
 			var path = "/apigkadm/apigks/" + obj.id;
 			// delete obj.id;
 			// var x = {name: obj.name};
-			return this._requestObj('PATCH', 'core', path, null, ['apigkadmin'], obj, callback);	
+			return this._requestObj('PATCH', 'core', path, null, ['apigkadmin'], obj, callback);
 		},
 		"apigkDelete": function(id, callback) {
 			var path = "/apigkadm/apigks/" + id;
@@ -253,18 +240,18 @@ define(function(require, exports, module) {
 		},
 		"apigkCheck": function(id, callback) {
 			var path = "/apigkadm/apigks/" + id + "/exists";
-			return this._request('core', path, null, ['apigkadmin'], callback);	
+			return this._request('core', path, null, ['apigkadmin'], callback);
 		},
 
 		"apigkClientRequests": function(callback) {
 			var owner = 'me';
 			var path = "/apigkadm/apigks/owners/" + owner + "/clients/";
-			return this._request('core', path, null, ['apigkadmin'], callback);	
+			return this._request('core', path, null, ['apigkadmin'], callback);
 		},
 
 		"apigkClientRequestsByOrg": function(orgid, callback) {
 			var path = "/apigkadm/apigks/orgs/" + orgid + "/clients/";
-			return this._request('core', path, null, ['apigkadmin'], callback);	
+			return this._request('core', path, null, ['apigkadmin'], callback);
 		},
 
 		"getGroups": function(callback) {
@@ -308,13 +295,19 @@ define(function(require, exports, module) {
 		},
 
 		"addGroupMember": function(groupid, token, type, callback) {
-			var data = [{"token": token, "type": type}];
+			var data = [{
+				"token": token,
+				"type": type
+			}];
 			var path = "/adhocgroups/" + groupid + "/members";
 			return this._requestObj("PATCH", 'core', path, null, ['adhocgroupadmin'], data, callback);
 		},
 
 		"updateGroupMember": function(groupid, userid, type, callback) {
-			var data = [{"id": userid, "type": type}];
+			var data = [{
+				"id": userid,
+				"type": type
+			}];
 			var path = "/adhocgroups/" + groupid + "/members";
 			return this._requestObj("PATCH", 'core', path, null, ['adhocgroupadmin'], data, callback);
 		},
@@ -339,7 +332,9 @@ define(function(require, exports, module) {
 
 		"joinGroupFromInvitation": function(groupid, token, callback) {
 			var path = "/adhocgroups/" + groupid + "/invitation";
-			var data = {"invitation_token": token};
+			var data = {
+				"invitation_token": token
+			};
 			return this._requestObj("POST", 'core', path, null, ['adhocgroupadmin'], data, callback);
 		},
 
@@ -365,7 +360,7 @@ define(function(require, exports, module) {
 
 		"authorizationsList": function(callback) {
 			var path = "/authorizations/";
-			return this._request('core', path, null, ['authzinfo'], callback);	
+			return this._request('core', path, null, ['authzinfo'], callback);
 		},
 
 		"authorizationsDelete": function(id, callback) {
@@ -376,13 +371,9 @@ define(function(require, exports, module) {
 
 
 
-
-
 		/*
 		 * Section on implementing OAUth based requests...
 		 */
-
-
 
 
 
@@ -390,9 +381,9 @@ define(function(require, exports, module) {
 			var options = inOptions || {};
 			options.url = this.config.apis[instance] + endpoint;
 			if (this.config.debug) {
-				console.log("About to perform a JSO OAuth request to " + instance + " [" + options.url + "]");	
+				console.log("About to perform a JSO OAuth request to " + instance + " [" + options.url + "]");
 			}
-			
+
 			return this.jso.request(options);
 		},
 
@@ -431,15 +422,15 @@ define(function(require, exports, module) {
 			console.log("About to perform a JSO OAuth request to [" + url + "]");
 
 			return this.jso.ajax({
-					url: url,
-					oauth: {
-						scopes: {
-							request: request,
-							require: require
-						}
-					},
-					dataType: 'json'
-				});
+				url: url,
+				oauth: {
+					scopes: {
+						request: request,
+						require: require
+					}
+				},
+				dataType: 'json'
+			});
 		},
 
 
@@ -456,7 +447,9 @@ define(function(require, exports, module) {
 					url: url,
 					dataType: 'json',
 					success: function(data) {
-						if (typeof callback === 'function') { callback(data); }
+						if (typeof callback === 'function') {
+							callback(data);
+						}
 						resolve(data);
 					},
 					error: function(jqXHR, text, error) {
@@ -467,7 +460,7 @@ define(function(require, exports, module) {
 								if (xmsg.hasOwnProperty("message")) {
 									str = xmsg.message + " \n(" + str + ")";
 								}
-							} catch(err) {}
+							} catch (err) {}
 						}
 						reject(new Error(str));
 					}
@@ -476,7 +469,6 @@ define(function(require, exports, module) {
 		}
 
 	});
-
 
 
 

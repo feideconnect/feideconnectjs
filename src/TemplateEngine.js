@@ -11,7 +11,6 @@ define(function(require, exports, module) {
 		"init": function(template, dict) {
 			this.index = utils.guid();
 			this.dict = dict;
-			// console.log("Template got index " + this.index);
 			dust.loadSource(dust.compile(template, this.index));
 		},
 		"loadPartial": function(id, template) {
@@ -23,7 +22,7 @@ define(function(require, exports, module) {
 		"render": function(el, view) {
 			var that = this;
 			if (typeof this.dict !== 'undefined') {
-				view._ = this.dict.get();	
+				view._ = this.dict.get();
 			}
 			return new Promise(function(resolve, reject) {
 				dust.render(that.index, view, function(err, out) {
@@ -38,8 +37,8 @@ define(function(require, exports, module) {
 
 	});
 
-	dust.filters.acceptnewline = function(value) {
 
+	dust.filters.acceptnewline = function(value) {
 		return value.replace(/[\r\n]{2,}/g, '<br /><br />');
 	}
 
