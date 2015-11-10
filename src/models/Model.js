@@ -1,11 +1,11 @@
 define(function(require, exports, module) {
 	"use strict";
 
-	var Class = require('lib/class');
+	var Class = require('../class');
 
 	var Model = Class.extend({
 		"init": function(props) {
-			for(var key in props) {
+			for (var key in props) {
 				this[key] = props[key];
 			}
 		},
@@ -14,7 +14,7 @@ define(function(require, exports, module) {
 		},
 		"getStorable": function() {
 			var res = {};
-			for(var key in this) {
+			for (var key in this) {
 				if (typeof this[key] !== 'function') {
 					res[key] = this[key];
 				}
@@ -24,7 +24,7 @@ define(function(require, exports, module) {
 		},
 		"getView": function() {
 			var res = {};
-			for(var key in this) {
+			for (var key in this) {
 				if (typeof this[key] !== 'function') {
 					res[key] = this[key];
 				}
@@ -37,4 +37,3 @@ define(function(require, exports, module) {
 
 	return Model;
 });
-
