@@ -369,6 +369,17 @@ define(function(require, exports, module) {
 
 		},
 
+		"resources_owned": function() {
+			var path = "/authorizations/resources_owned";
+			return this._request('core', path, null, ['authzinfo']);
+		},
+
+
+		"withdrawconsent": function() {
+			var path = "/authorizations/consent_withdrawn";
+			return this._requestObj("POST", 'core', path, null, ['authzinfo'], null);
+		},
+
 
 
 		/*
