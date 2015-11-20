@@ -444,7 +444,17 @@ define(function(require, exports, module) {
 			});
 		},
 
-
+		"_customRequestAdv": function(method, url, request, require, data, callback, inOptions) {
+			var options = inOptions || {};
+			options.url = url;
+			options.type = method;
+			options.data = JSON.stringify(data, undefined, 2);
+			options.contentType = 'application/json; charset=UTF-8';
+			if (this.config.debug) {
+				console.log("About to perform a JSO OAuth request to " + url + "");
+			}
+			return this.jso.request(options);
+		},
 
 		"_requestPublic": function(instance, endpoint, callback) {
 
