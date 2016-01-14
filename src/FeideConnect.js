@@ -111,6 +111,14 @@ define(function(require, exports, module) {
 		},
 
 
+
+
+		"getOrgs": function() {
+			var path = "/orgs/";
+			return this._requestPublic('core', path);
+		},
+		
+
 		// TODO : Check what scope is really required.
 		"getMandatoryClients": function(orgid, callback) {
 			var path = "/orgs/" + orgid + "/mandatory_clients/";
