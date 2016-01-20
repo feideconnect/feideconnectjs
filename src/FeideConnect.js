@@ -135,7 +135,6 @@ define(function(require, exports, module) {
 		},
 
 
-
 		"getOrgTargetedAPIs": function(orgid) {
 			var path = '/clientadm/realmclients/targetrealm/' + orgid + '/';
 			return this._request('core', path, null, ['orgadmin']);
@@ -153,6 +152,11 @@ define(function(require, exports, module) {
 			return this._request('core', path, null, ['clientadmin'], callback);
 		},
 
+
+		"getMyMandatoryClients": function(orgid) {
+			var path = '/clientadm/v1/mandatory/';
+			return this._request('core', path, null, ['authzinfo']);
+		},
 
 		"clientsList": function(callback) {
 			var path = "/clientadm/clients/";
