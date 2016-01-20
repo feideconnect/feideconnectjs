@@ -8,6 +8,18 @@ define(function(require, exports, module) {
 		$ = require('jquery');
 
 
+	var fcDataporten = {
+		providerId: "dataporten-prod",
+		authorization: "https://auth.dataporten.no/oauth/authorization",
+		token: "https://auth.dataporten.no/oauth/token",
+		apis: {
+			"auth": "https://auth.dataporten.no",
+			"core": "https://api.dataporten.no",
+			"groups": "https://groups-api.dataporten.no"
+		},
+
+		"debug": false
+	};
 
 	var fcDev1 = {
 		providerId: "feideconnect-dev1",
@@ -81,8 +93,9 @@ define(function(require, exports, module) {
 			if (config.instance && config.instance === 'pilot') {
 				selectedConfig = fcPilot;
 			}
-
-
+			if (config.instance && config.instance === 'dataporten') {
+				selectedConfig = fcDataporten;
+			}
 
 			var xconfig = $.extend({}, selectedConfig, defaults, config);
 
