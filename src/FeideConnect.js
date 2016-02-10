@@ -138,9 +138,8 @@ define(function(require, exports, module) {
 			return this._request('core', path, null, ['orgadmin'], callback);
 		},
 		"setMandatoryClient": function(orgid, clientid, callback) {
-			var path = "/orgs/" + orgid + "/mandatory_clients/";
-			var obj = clientid;
-			return this._requestObj('POST', 'core', path, null, ['orgadmin'], obj, callback);
+			var path = "/orgs/" + orgid + "/mandatory_clients/" + clientid;
+			return this._requestObj('PUT', 'core', path, null, ['orgadmin'], null, callback);
 		},
 		"removeMandatoryClient": function(orgid, clientid, callback) {
 			var path = "/orgs/" + orgid + "/mandatory_clients/" + clientid;
