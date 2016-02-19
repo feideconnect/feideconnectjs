@@ -17,7 +17,7 @@ define(function(require, exports, module) {
 			"core": "https://api.dataporten.no",
 			"groups": "https://groups-api.dataporten.no"
 		},
-
+		userInfo: "https://auth.dataporten.no/userinfo",
 		"debug": false
 	};
 
