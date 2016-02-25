@@ -150,6 +150,10 @@ define(function(require, exports, module) {
 			return this._requestObj('DELETE', 'core', path, null, ['orgadmin'], null, callback);
 		},
 
+		"getClientPolicy": function(id, callback) {
+			var path = "/clientadm/policy";
+			return this._request('core', path, null, ['clientadmin'], callback);
+		},
 
 		"getOrgTargetedAPIs": function(orgid) {
 			var path = '/clientadm/realmclients/targetrealm/' + orgid + '/';
@@ -160,8 +164,6 @@ define(function(require, exports, module) {
 			var path = '/clientadm/clients/' + clientid + '/orgauthorization/' + realm;
 			return this._requestObj("PATCH", 'core', path, null, ['orgadmin'], data);
 		},
-
-
 
 		"getClient": function(id, callback) {
 			var path = "/clientadm/clients/" + id;
