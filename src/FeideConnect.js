@@ -126,8 +126,12 @@ define(function(require, exports, module) {
 
 
 
-		"getOrgs": function() {
+		"getOrgs": function(inFilters) {
 			var path = "/orgs/";
+			var filters = inFilters || {};
+			if (!$.isEmptyObject(filters)) {
+				path = path + '?' + $.param(filters);
+			}
 			return this._requestPublic('core', path);
 		},
 		
