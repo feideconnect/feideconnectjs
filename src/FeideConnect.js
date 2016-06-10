@@ -228,6 +228,12 @@ define(function(require, exports, module) {
 			return this._requestPublic('core', path, callback);
 		},
 
+
+		"getAPIGK": function(id, callback) {
+			var path = "/apigkadm/apigks/" + id;
+			return this._request('core', path, null, ['apigkadmin'], callback);
+		},
+
 		"apigkList": function(callback) {
 			var path = "/apigkadm/apigks/";
 			return this._request('core', path, null, ['apigkadmin'], callback);
