@@ -22,8 +22,6 @@ define(function(require, exports, module) {
 	};
 
 
-
-
 	var FeideConnect = OpenIDAuthentication.extend({
 		"init": function(config) {
 			var defaults = {
@@ -82,6 +80,21 @@ define(function(require, exports, module) {
 			return this._requestPublic('core', path);
 		},
 
+		"updateOrg": function(orgid, data) {
+			var path = "/orgs/" + orgid;
+			return this._requestObj("PATCH", 'core', path, null, ['orgadmin'], data);
+		},
+
+		"orgUpdateLogo": function(orgid, obj) {
+			var path = "/orgs/" + orgid + '/logo';
+			var contenttype = "image/png";
+			// alert("UPDATE LOGO");
+			if (obj.type) {
+				contenttype = obj.type;
+			}
+			return this._requestBinary('POST', 'core', path, null, ['orgadmin'], obj, contenttype);
+		},
+
 		// TODO : Check what scope is really required.
 		"getMandatoryClients": function(orgid, callback) {
 			var path = "/orgs/" + orgid + "/mandatory_clients/";
@@ -95,6 +108,16 @@ define(function(require, exports, module) {
 			var path = "/orgs/" + orgid + "/mandatory_clients/" + clientid;
 			return this._requestObj('DELETE', 'core', path, null, ['orgadmin'], null, callback);
 		},
+
+		"orgServiceAdd": function(orgid, service) {
+			var path = "/orgs/" + orgid + "/services/" + service;
+			return this._requestObj('PUT', 'core', path, null, ['orgadmin'], null);
+		},
+		"orgServiceRemove": function(orgid, service) {
+			var path = "/orgs/" + orgid + "/services/" + service;
+			return this._requestObj('DELETE', 'core', path, null, ['orgadmin'], null);
+		},
+
 
 		"getClientPolicy": function(id, callback) {
 			var path = "/clientadm/policy";
