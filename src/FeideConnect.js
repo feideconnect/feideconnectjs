@@ -21,53 +21,6 @@ define(function(require, exports, module) {
 		"debug": false
 	};
 
-	var fcDev1 = {
-		providerId: "feideconnect-dev1",
-		authorization: "https://auth.dev.feideconnect.no/oauth/authorization",
-		token: "https://auth.dev.feideconnect.no/oauth/token",
-		apis: {
-			"auth": "https://auth.dev.feideconnect.no",
-			"core": "https://api.dev.feideconnect.no",
-			"groups": "https://groups-api.dev.feideconnect.no"
-		},
-
-		"debug": false
-	};
-	var fcDev2 = {
-		providerId: "feideconnect-dev1",
-		authorization: "https://auth.feideconnect.no/oauth/authorization",
-		token: "https://auth.feideconnect.no/oauth/token",
-		apis: {
-			"auth": "https://auth.feideconnect.no",
-			"core": "https://api.dev.feideconnect.no",
-			"groups": "https://groups-api.feideconnect.no"
-		},
-
-		"debug": false
-	};
-	var fcDev = {
-		providerId: "feideconnect-dev",
-		authorization: "https://auth.dev.feideconnect.no/oauth/authorization",
-		token: "https://auth.dev.feideconnect.no/oauth/token",
-		apis: {
-			"auth": "https://auth.dev.feideconnect.no",
-			"core": "https://api.feideconnect.no",
-			"groups": "https://groups-api.dev.feideconnect.no"
-		},
-		"debug": false,
-		userInfo: "https://auth.dev.feideconnect.no/userinfo"
-	};
-	var fcPilot = {
-		providerId: "feideconnect-pilot",
-		authorization: "https://auth.feideconnect.no/oauth/authorization",
-		token: "https://auth.feideconnect.no/oauth/token",
-		apis: {
-			"auth": "https://auth.feideconnect.no",
-			"core": "https://api.feideconnect.no",
-			"groups": "https://groups-api.feideconnect.no"
-		},
-		userInfo: "https://auth.feideconnect.no/userinfo"
-	};
 
 
 
@@ -81,18 +34,7 @@ define(function(require, exports, module) {
 
 
 			var selectedConfig = {};
-			if (config.instance && config.instance === 'dev1') {
-				selectedConfig = fcDev1;
-			}
-			if (config.instance && config.instance === 'dev2') {
-				selectedConfig = fcDev2;
-			}
-			if (config.instance && config.instance === 'dev') {
-				selectedConfig = fcDev;
-			}
-			if (config.instance && config.instance === 'pilot') {
-				selectedConfig = fcPilot;
-			}
+
 			if (config.instance && config.instance === 'dataporten') {
 				selectedConfig = fcDataporten;
 			}
