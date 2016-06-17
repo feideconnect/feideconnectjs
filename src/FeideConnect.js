@@ -139,6 +139,11 @@ define(function(require, exports, module) {
 			return this._request('core', path, null, ['clientadmin'], callback);
 		},
 
+		"getClientStats": function(id, params) {
+			var path = "/clientadm/clients/" + id + '/logins_stats/' + FeideConnect.buildQuery(params);
+			return this._request('core', path, null, ['clientadmin'], undefined, {});
+		},
+
 
 		"getMyMandatoryClients": function(orgid) {
 			var path = '/clientadm/v1/mandatory/';
@@ -388,10 +393,8 @@ define(function(require, exports, module) {
 
 
 		/*
-		 * Section on implementing OAUth based requests...
+		 * Section on implementing OAuth based requests...
 		 */
-
-
 
 		"_request": function(instance, endpoint, request, require, callback, inOptions) {
 			var options = inOptions || {};
@@ -496,7 +499,20 @@ define(function(require, exports, module) {
 
 	});
 
+	FeideConnect.buildQuery = function(params) {
+		if (params === null) {
+			return '';
+		}
+		if (typeof params === 'undefined') {
+			return '';
+		}
 
+		var pl = [];
+		for(var key in params) {
+			pl.push(encodeURIComponent(key) + '=' + encodeURIComponent(params[key]));
+		}
+		return '?' + pl.join('&');
+	}
 
 	exports.FeideConnect = FeideConnect;
 
