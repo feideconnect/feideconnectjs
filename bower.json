@@ -1,11 +1,11 @@
 {
 	"name": "feideconnectjs",
 	"version": "2.9.0",
-	"description": "Feide Connect Javascript Library",
+	"description": "Dataporten Javascript Library",
 	"authors": [
 		"Andreas Åkre Solberg"
 	],
-	"homepage": "http://feideconnect.no",
+	"homepage": "http://dataporten.no",
 	"main": "src/FeideConnect.js",
 	"license": "LGPL 2.1",
 	"ignore": [
