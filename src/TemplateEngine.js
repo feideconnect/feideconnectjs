@@ -24,6 +24,11 @@ define(function(require, exports, module) {
 			var that = this;
 			if (typeof this.dict !== 'undefined') {
 				view._ = this.dict.get();
+				view.intl = {
+					"locales": this.dict.getItem("_lang") || "en",
+					"messages": this.dict.get()
+				};
+
 			}
 			return new Promise(function(resolve, reject) {
 				dust.render(that.index, view, function(err, out) {
