@@ -8,9 +8,10 @@ define(function(require, exports, module) {
 		dust = require('dust');
 
 	var TemplateEngine = Class.extend({
-		"init": function(template, dict) {
+		"init": function(template, dict, empty) {
 			this.index = utils.guid();
 			this.dict = dict;
+			this.empty = empty;
 			dust.loadSource(dust.compile(template, this.index));
 		},
 		"loadPartial": function(id, template) {
@@ -28,6 +29,9 @@ define(function(require, exports, module) {
 				dust.render(that.index, view, function(err, out) {
 					if (err) {
 						return reject(err);
+					}
+					if (that.empty) {
+						el.empty();
 					}
 					el.append(out);
 					resolve();
