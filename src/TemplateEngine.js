@@ -49,7 +49,7 @@ define(function(require, exports, module) {
 
 	dust.filters.acceptnewline = function(value) {
 		return value.replace(/[\r\n]{2,}/g, '<br /><br />');
-	}
+	};
 
 	return TemplateEngine;
 
