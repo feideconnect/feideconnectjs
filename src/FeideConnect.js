@@ -146,7 +146,7 @@ define(function(require, exports, module) {
 
 
 		"getMyMandatoryClients": function(orgid) {
-			var path = '/clientadm/v1/mandatory/';
+			var path = '/authorizations/mandatory_clients/';
 			return this._request('core', path, null, ['authzinfo']);
 		},
 
