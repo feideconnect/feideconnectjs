@@ -92,6 +92,11 @@ define(function(require, exports, module) {
 			return this._requestBinary('POST', 'core', path, obj, contenttype);
 		},
 
+		"orgLDAPStatus": function(orgid) {
+			var path = '/orgs/' + orgid + '/ldap_status';
+			return this._request('core', path);
+		},
+
 		"getMandatoryClients": function(orgid) {
 			var path = "/orgs/" + orgid + "/mandatory_clients/";
 			return this._request('core', path);
