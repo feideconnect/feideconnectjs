@@ -140,7 +140,7 @@ define(function(require, exports, module) {
 
 		"getClientStats": function(id, params) {
 			var path = "/clientadm/clients/" + id + '/logins_stats/' + FeideConnect.buildQuery(params);
-			return this._request('core', path, {});
+			return this._request('core', path);
 		},
 
 
