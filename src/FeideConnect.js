@@ -433,36 +433,6 @@ define(function(require, exports, module) {
 			return this.jso.request(options);
 		},
 
-
-
-		"_customRequest": function(url, request, require, callback) {
-			var that = this;
-			console.log("About to perform a JSO OAuth request to [" + url + "]");
-
-			return this.jso.ajax({
-				url: url,
-				oauth: {
-					scopes: {
-						request: request,
-						require: require
-					}
-				},
-				dataType: 'json'
-			});
-		},
-
-		"_customRequestAdv": function(method, url, request, require, data, callback, inOptions) {
-			var options = inOptions || {};
-			options.url = url;
-			options.type = method;
-			options.data = JSON.stringify(data, undefined, 2);
-			options.contentType = 'application/json; charset=UTF-8';
-			if (this.config.debug) {
-				console.log("About to perform a JSO OAuth request to " + url + "");
-			}
-			return this.jso.request(options);
-		},
-
 		"_requestPublic": function(instance, endpoint, callback) {
 
 			var that = this;
