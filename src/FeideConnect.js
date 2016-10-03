@@ -63,9 +63,6 @@ define(function(require, exports, module) {
 			return this._request('core', path);
 		},
 
-
-
-
 		"getOrgs": function(inFilters) {
 			var path = "/orgs/";
 			var filters = inFilters || {};
@@ -99,10 +96,12 @@ define(function(require, exports, module) {
 			var path = "/orgs/" + orgid + "/mandatory_clients/";
 			return this._request('core', path);
 		},
+
 		"setMandatoryClient": function(orgid, clientid) {
 			var path = "/orgs/" + orgid + "/mandatory_clients/" + clientid;
 			return this._requestObj('PUT', 'core', path, null);
 		},
+
 		"removeMandatoryClient": function(orgid, clientid) {
 			var path = "/orgs/" + orgid + "/mandatory_clients/" + clientid;
 			return this._requestObj('DELETE', 'core', path, null);
@@ -112,11 +111,11 @@ define(function(require, exports, module) {
 			var path = "/orgs/" + orgid + "/services/" + service;
 			return this._requestObj('PUT', 'core', path, null);
 		},
+
 		"orgServiceRemove": function(orgid, service) {
 			var path = "/orgs/" + orgid + "/services/" + service;
 			return this._requestObj('DELETE', 'core', path, null);
 		},
-
 
 		"getClientPolicy": function(id) {
 			var path = "/clientadm/policy";
@@ -142,7 +141,6 @@ define(function(require, exports, module) {
 			var path = "/clientadm/clients/" + id + '/logins_stats/' + FeideConnect.buildQuery(params);
 			return this._request('core', path);
 		},
-
 
 		"getMyMandatoryClients": function(orgid) {
 			var path = '/authorizations/mandatory_clients/';
@@ -201,7 +199,6 @@ define(function(require, exports, module) {
 			return this._requestPublic('core', path);
 		},
 
-
 		"getAPIGK": function(id) {
 			var path = "/apigkadm/apigks/" + id;
 			return this._request('core', path);
@@ -223,23 +220,25 @@ define(function(require, exports, module) {
 		"apigkPublicList": function() {
 			var path = "/apigkadm/public";
 			return this._requestPublic('core', path);
-
 		},
 
 		"apigkRegister": function(obj) {
 			var path = "/apigkadm/apigks/";
 			return this._requestObj('POST', 'core', path, obj);
 		},
+
 		"apigkUpdate": function(obj) {
 			var path = "/apigkadm/apigks/" + obj.id;
 			// delete obj.id;
 			// var x = {name: obj.name};
 			return this._requestObj('PATCH', 'core', path, obj);
 		},
+
 		"apigkDelete": function(id) {
 			var path = "/apigkadm/apigks/" + id;
 			return this._requestObj('DELETE', 'core', path, null);
 		},
+
 		"apigkUpdateLogo": function(id, obj) {
 			var path = "/apigkadm/apigks/" + id + "/logo";
 			var contenttype = obj.contenttype;
@@ -247,6 +246,7 @@ define(function(require, exports, module) {
 			contenttype = "image/jpeg";
 			return this._requestBinary('POST', 'core', path, obj, contenttype);
 		},
+
 		"apigkCheck": function(id) {
 			var path = "/apigkadm/apigks/" + id + "/exists";
 			return this._request('core', path);
@@ -338,7 +338,6 @@ define(function(require, exports, module) {
 			return this._requestObj("PATCH", 'core', path, data);
 		},
 
-
 		"joinGroupFromInvitation": function(groupid, token) {
 			var path = "/adhocgroups/" + groupid + "/invitation";
 			var data = {
@@ -357,15 +356,16 @@ define(function(require, exports, module) {
 			var path = "/groups/me/groups";
 			return this._request('groups', path);
 		},
+
 		"vootGroupsPublicList": function() {
 			var path = "/groups/groups";
 			return this._request('groups', path);
 		},
+
 		"vootGrouptypes": function() {
 			var path = "/groups/grouptypes";
 			return this._request('groups', path);
 		},
-
 
 		"authorizationsList": function() {
 			var path = "/authorizations/";
@@ -375,7 +375,6 @@ define(function(require, exports, module) {
 		"authorizationsDelete": function(id) {
 			var path = "/authorizations/" + id;
 			return this._requestObj("DELETE", 'core', path, null);
-
 		},
 
 		"resources_owned": function() {
@@ -383,13 +382,10 @@ define(function(require, exports, module) {
 			return this._request('core', path);
 		},
 
-
 		"withdrawconsent": function() {
 			var path = "/authorizations/consent_withdrawn";
 			return this._requestObj("POST", 'core', path, null);
 		},
-
-
 
 		/*
 		 * Section on implementing OAuth based requests...
@@ -405,7 +401,6 @@ define(function(require, exports, module) {
 			return this.jso.request(options);
 		},
 
-
 		"_requestObj": function(method, instance, endpoint, data, inOptions) {
 			var options = inOptions || {};
 			options.url = this.config.apis[instance] + endpoint;
@@ -417,8 +412,6 @@ define(function(require, exports, module) {
 			}
 			return this.jso.request(options);
 		},
-
-
 
 		"_requestBinary": function(method, instance, endpoint, data, contentType, inOptions) {
 
