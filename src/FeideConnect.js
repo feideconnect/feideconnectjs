@@ -13,6 +13,7 @@ define(function(require, exports, module) {
 		authorization: "https://auth.dataporten.no/oauth/authorization",
 		token: "https://auth.dataporten.no/oauth/token",
 		apis: {
+			"apigkadm": "https://api.dataporten.no/apigkadm",
 			"clientadm": "https://api.dataporten.no/clientadm",
 			"auth": "https://auth.dataporten.no",
 			"core": "https://api.dataporten.no",
@@ -43,6 +44,9 @@ define(function(require, exports, module) {
 			this._super(xconfig);
 			if (!("clientadm" in this.config.apis)) {
 				this.config.apis.clientadm = this.config.apis.core + '/clientadm';
+			}
+			if (!("apigkadm" in this.config.apis)) {
+				this.config.apis.clientadm = this.config.apis.core + '/apigkadm';
 			}
 		},
 
@@ -209,67 +213,67 @@ define(function(require, exports, module) {
 		},
 
 		"getAPIGK": function(id) {
-			var path = "/apigkadm/apigks/" + id;
-			return this._request('core', path);
+			var path = "/apigks/" + id;
+			return this._request('apigkadm', path);
 		},
 
 		"apigkList": function() {
-			var path = "/apigkadm/apigks/";
-			return this._request('core', path);
+			var path = "/apigks/";
+			return this._request('apigkadm', path);
 		},
 
 		"apigkListByOrg": function(orgid) {
-			var path = "/apigkadm/apigks/";
+			var path = "/apigks/";
 			if (orgid !== null) {
 				path += "?organization=" + encodeURIComponent(orgid);
 			}
-			return this._request('core', path);
+			return this._request('apigkadm', path);
 		},
 
 		"apigkPublicList": function() {
-			var path = "/apigkadm/public";
-			return this._requestPublic('core', path);
+			var path = "/public";
+			return this._requestPublic('apigkadm', path);
 		},
 
 		"apigkRegister": function(obj) {
-			var path = "/apigkadm/apigks/";
-			return this._requestObj('POST', 'core', path, obj);
+			var path = "/apigks/";
+			return this._requestObj('POST', 'apigkadm', path, obj);
 		},
 
 		"apigkUpdate": function(obj) {
-			var path = "/apigkadm/apigks/" + obj.id;
+			var path = "/apigks/" + obj.id;
 			// delete obj.id;
 			// var x = {name: obj.name};
-			return this._requestObj('PATCH', 'core', path, obj);
+			return this._requestObj('PATCH', 'apigkadm', path, obj);
 		},
 
 		"apigkDelete": function(id) {
-			var path = "/apigkadm/apigks/" + id;
-			return this._requestObj('DELETE', 'core', path, null);
+			var path = "/apigks/" + id;
+			return this._requestObj('DELETE', 'apigkadm', path, null);
 		},
 
 		"apigkUpdateLogo": function(id, obj) {
-			var path = "/apigkadm/apigks/" + id + "/logo";
+			var path = "/apigks/" + id + "/logo";
 			var contenttype = obj.contenttype;
 			console.log("File content type: " + contenttype);
 			contenttype = "image/jpeg";
-			return this._requestBinary('POST', 'core', path, obj, contenttype);
+			return this._requestBinary('POST', 'apigkadm', path, obj, contenttype);
 		},
 
 		"apigkCheck": function(id) {
-			var path = "/apigkadm/apigks/" + id + "/exists";
-			return this._request('core', path);
+			var path = "/apigks/" + id + "/exists";
+			return this._request('apigkadm', path);
 		},
 
 		"apigkClientRequests": function() {
 			var owner = 'me';
-			var path = "/apigkadm/apigks/owners/" + owner + "/clients/";
-			return this._request('core', path);
+			var path = "/apigks/owners/" + owner + "/clients/";
+			return this._request('apigkadm', path);
 		},
 
 		"apigkClientRequestsByOrg": function(orgid) {
-			var path = "/apigkadm/apigks/orgs/" + orgid + "/clients/";
-			return this._request('core', path);
+			var path = "/apigks/orgs/" + orgid + "/clients/";
+			return this._request('apigkadm', path);
 		},
 
 		"getGroups": function() {
