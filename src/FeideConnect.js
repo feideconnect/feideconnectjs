@@ -74,10 +74,10 @@ define(function(require, exports, module) {
 		"getOrgs": function(inFilters) {
 			var path = "/orgs/";
 			var filters = inFilters || {};
-			if (!$.isEmptyObject(filters)) {
-				path = path + '?' + $.param(filters);
-			}
-			return this._requestPublic('core', path);
+			var options = {
+				'data': filters
+			};
+			return this._requestPublic('core', path, options);
 		},
 		
 		"getOrg": function(orgid) {
@@ -151,8 +151,11 @@ define(function(require, exports, module) {
 		},
 
 		"getClientStats": function(id, params) {
-			var path = "/clients/" + id + '/logins_stats/' + FeideConnect.buildQuery(params);
-			return this._request('clientadm', path);
+			var options = {
+				'data': params
+			};
+			var path = "/clients/" + id + '/logins_stats/';
+			return this._request('clientadm', path, options);
 		},
 
 		"clientsList": function() {
@@ -463,21 +466,6 @@ define(function(require, exports, module) {
 		}
 
 	});
-
-	FeideConnect.buildQuery = function(params) {
-		if (params === null) {
-			return '';
-		}
-		if (typeof params === 'undefined') {
-			return '';
-		}
-
-		var pl = [];
-		for(var key in params) {
-			pl.push(encodeURIComponent(key) + '=' + encodeURIComponent(params[key]));
-		}
-		return '?' + pl.join('&');
-	};
 
 	exports.FeideConnect = FeideConnect;
 
