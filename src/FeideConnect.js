@@ -49,18 +49,18 @@ define(function(require, exports, module) {
 		},
 
 		"getUserInfo": function() {
-			return this._request('auth', '/userinfo', null, ['userinfo']);
+			return this._request('auth', '/userinfo', null);
 		},
 
 
 		"psOrgs": function(callback) {
 			var path = "peoplesearch/orgs";
-			return this._request('core', '/peoplesearch/orgs', null, ['peoplesearch'], callback);
+			return this._request('core', '/peoplesearch/orgs', null, callback);
 		},
 
 		"psSearch": function(realm, query, callback) {
 			var path = "/peoplesearch/search/" + realm + "/" + encodeURI(query);
-			return this._request('core', path, null, ['peoplesearch'], callback);
+			return this._request('core', path, null, callback);
 		},
 
 
@@ -82,7 +82,7 @@ define(function(require, exports, module) {
 
 		"updateOrg": function(orgid, data) {
 			var path = "/orgs/" + orgid;
-			return this._requestObj("PATCH", 'core', path, null, ['orgadmin'], data);
+			return this._requestObj("PATCH", 'core', path, null, data);
 		},
 
 		"orgUpdateLogo": function(orgid, obj) {
@@ -92,72 +92,71 @@ define(function(require, exports, module) {
 			if (obj.type) {
 				contenttype = obj.type;
 			}
-			return this._requestBinary('POST', 'core', path, null, ['orgadmin'], obj, contenttype);
+			return this._requestBinary('POST', 'core', path, null, obj, contenttype);
 		},
 
-		// TODO : Check what scope is really required.
 		"getMandatoryClients": function(orgid, callback) {
 			var path = "/orgs/" + orgid + "/mandatory_clients/";
-			return this._request('core', path, null, ['orgadmin'], callback);
+			return this._request('core', path, null, callback);
 		},
 		"setMandatoryClient": function(orgid, clientid, callback) {
 			var path = "/orgs/" + orgid + "/mandatory_clients/" + clientid;
-			return this._requestObj('PUT', 'core', path, null, ['orgadmin'], null, callback);
+			return this._requestObj('PUT', 'core', path, null, null, callback);
 		},
 		"removeMandatoryClient": function(orgid, clientid, callback) {
 			var path = "/orgs/" + orgid + "/mandatory_clients/" + clientid;
-			return this._requestObj('DELETE', 'core', path, null, ['orgadmin'], null, callback);
+			return this._requestObj('DELETE', 'core', path, null, null, callback);
 		},
 
 		"orgServiceAdd": function(orgid, service) {
 			var path = "/orgs/" + orgid + "/services/" + service;
-			return this._requestObj('PUT', 'core', path, null, ['orgadmin'], null);
+			return this._requestObj('PUT', 'core', path, null, null);
 		},
 		"orgServiceRemove": function(orgid, service) {
 			var path = "/orgs/" + orgid + "/services/" + service;
-			return this._requestObj('DELETE', 'core', path, null, ['orgadmin'], null);
+			return this._requestObj('DELETE', 'core', path, null, null);
 		},
 
 
 		"getClientPolicy": function(id, callback) {
 			var path = "/clientadm/policy";
-			return this._request('core', path, null, ['clientadmin'], callback);
+			return this._request('core', path, null, callback);
 		},
 
 		"getOrgTargetedAPIs": function(orgid) {
 			var path = '/clientadm/realmclients/targetrealm/' + orgid + '/';
-			return this._request('core', path, null, ['orgadmin']);
+			return this._request('core', path, null);
 		},
 
 		"updateOrgAuthorizations": function(realm, clientid, data) {
 			var path = '/clientadm/clients/' + clientid + '/orgauthorization/' + realm;
-			return this._requestObj("PATCH", 'core', path, null, ['orgadmin'], data);
+			return this._requestObj("PATCH", 'core', path, null, data);
 		},
 
 		"getClient": function(id, callback) {
 			var path = "/clientadm/clients/" + id;
-			return this._request('core', path, null, ['clientadmin'], callback);
+			return this._request('core', path, null, callback);
 		},
 
 		"getClientStats": function(id, params) {
 			var path = "/clientadm/clients/" + id + '/logins_stats/' + FeideConnect.buildQuery(params);
-			return this._request('core', path, null, ['clientadmin'], undefined, {});
+			return this._request('core', path, null, undefined, {});
 		},
 
 
 		"getMyMandatoryClients": function(orgid) {
 			var path = '/authorizations/mandatory_clients/';
-			return this._request('core', path, null, ['authzinfo']);
+			return this._request('core', path, null);
 		},
 
 		"clientsList": function(callback) {
 			var path = "/clientadm/clients/";
-			return this._request('core', path, null, ['clientadmin'], callback);
+			return this._request('core', path, null, callback);
 		},
 
 		"clientsByScope": function(scope, callback) {
 			var path = "/clientadm/clients/?scope=" + encodeURIComponent(scope);
-			return this._request('core', path, null, ['clientadmin'], callback);
+			return this._request('core', path, null, callback);
 		},
 
 		"clientsByOrg": function(orgid, callback) {
@@ -165,27 +164,27 @@ define(function(require, exports, module) {
 			if (orgid !== null) {
 				path += "?organization=" + encodeURIComponent(orgid);
 			}
-			return this._request('core', path, null, ['clientadmin'], callback);
+			return this._request('core', path, null, callback);
 		},
 
 		"clientsRegister": function(obj, callback) {
 			var path = "/clientadm/clients/";
-			return this._requestObj('POST', 'core', path, null, ['clientadmin'], obj, callback);
+			return this._requestObj('POST', 'core', path, null, obj, callback);
 		},
 
 		"clientsUpdate": function(obj, callback) {
 			var path = "/clientadm/clients/" + obj.id;
-			return this._requestObj('PATCH', 'core', path, null, ['clientadmin'], obj, callback);
+			return this._requestObj('PATCH', 'core', path, null, obj, callback);
 		},
 
 		"clientsAuthorizeAPIGKscopes": function(id, obj, callback) {
 			var path = "/clientadm/clients/" + id + "/gkscopes";
-			return this._requestObj('PATCH', 'core', path, null, ['clientadmin'], obj, callback);
+			return this._requestObj('PATCH', 'core', path, null, obj, callback);
 		},
 
 		"clientsDelete": function(clientid, callback) {
 			var path = "/clientadm/clients/" + clientid;
-			return this._requestObj('DELETE', 'core', path, null, ['clientadmin'], null, callback);
+			return this._requestObj('DELETE', 'core', path, null, null, callback);
 		},
 
 		"clientsUpdateLogo": function(id, obj) {
@@ -194,7 +193,7 @@ define(function(require, exports, module) {
 			if (obj.type) {
 				contenttype = obj.type;
 			}
-			return this._requestBinary('POST', 'core', path, null, ['clientadmin'], obj, contenttype);
+			return this._requestBinary('POST', 'core', path, null, obj, contenttype);
 		},
 
 		"clientsPublicList": function(callback) {
@@ -205,12 +204,12 @@ define(function(require, exports, module) {
 
 		"getAPIGK": function(id, callback) {
 			var path = "/apigkadm/apigks/" + id;
-			return this._request('core', path, null, ['apigkadmin'], callback);
+			return this._request('core', path, null, callback);
 		},
 
 		"apigkList": function(callback) {
 			var path = "/apigkadm/apigks/";
-			return this._request('core', path, null, ['apigkadmin'], callback);
+			return this._request('core', path, null, callback);
 		},
 
 		"apigkListByOrg": function(orgid, callback) {
@@ -218,7 +217,7 @@ define(function(require, exports, module) {
 			if (orgid !== null) {
 				path += "?organization=" + encodeURIComponent(orgid);
 			}
-			return this._request('core', path, null, ['clientadmin'], callback);
+			return this._request('core', path, null, callback);
 		},
 
 		"apigkPublicList": function(callback) {
@@ -229,79 +228,79 @@ define(function(require, exports, module) {
 
 		"apigkRegister": function(obj, callback) {
 			var path = "/apigkadm/apigks/";
-			return this._requestObj('POST', 'core', path, null, ['apigkadmin'], obj, callback);
+			return this._requestObj('POST', 'core', path, null, obj, callback);
 		},
 		"apigkUpdate": function(obj, callback) {
 			var path = "/apigkadm/apigks/" + obj.id;
 			// delete obj.id;
 			// var x = {name: obj.name};
-			return this._requestObj('PATCH', 'core', path, null, ['apigkadmin'], obj, callback);
+			return this._requestObj('PATCH', 'core', path, null, obj, callback);
 		},
 		"apigkDelete": function(id, callback) {
 			var path = "/apigkadm/apigks/" + id;
-			return this._requestObj('DELETE', 'core', path, null, ['apigkadmin'], null, callback);
+			return this._requestObj('DELETE', 'core', path, null, null, callback);
 		},
 		"apigkUpdateLogo": function(id, obj, callback) {
 			var path = "/apigkadm/apigks/" + id + "/logo";
 			var contenttype = obj.contenttype;
 			console.log("File content type: " + contenttype);
 			contenttype = "image/jpeg";
-			return this._requestBinary('POST', 'core', path, null, ['apigkadmin'], obj, contenttype, callback);
+			return this._requestBinary('POST', 'core', path, null, obj, contenttype, callback);
 		},
 		"apigkCheck": function(id, callback) {
 			var path = "/apigkadm/apigks/" + id + "/exists";
-			return this._request('core', path, null, ['apigkadmin'], callback);
+			return this._request('core', path, null, callback);
 		},
 
 		"apigkClientRequests": function(callback) {
 			var owner = 'me';
 			var path = "/apigkadm/apigks/owners/" + owner + "/clients/";
-			return this._request('core', path, null, ['apigkadmin'], callback);
+			return this._request('core', path, null, callback);
 		},
 
 		"apigkClientRequestsByOrg": function(orgid, callback) {
 			var path = "/apigkadm/apigks/orgs/" + orgid + "/clients/";
-			return this._request('core', path, null, ['apigkadmin'], callback);
+			return this._request('core', path, null, callback);
 		},
 
 		"getGroups": function(callback) {
 			var path = "/adhocgroups/";
-			return this._request('core', path, null, ['adhocgroupadmin'], callback);
+			return this._request('core', path, null, callback);
 		},
 
 		"getGroup": function(id, callback) {
 			var path = "/adhocgroups/" + id;
-			return this._request('core', path, null, ['adhocgroupadmin'], callback);
+			return this._request('core', path, null, callback);
 		},
 
 		"getGroupInvited": function(id, token, callback) {
 			var path = "/adhocgroups/" + id + '?invitation_token=' + encodeURIComponent(token);
-			return this._request('core', path, null, ['adhocgroupadmin'], callback);
+			return this._request('core', path, null, callback);
 		},
 
 		"getGroupDetails": function(id, callback) {
 			var path = "/adhocgroups/" + id + "/details";
-			return this._request('core', path, null, ['adhocgroupadmin'], callback);
+			return this._request('core', path, null, callback);
 		},
 
 		"updateGroup": function(groupid, data, callback) {
 			var path = "/adhocgroups/" + groupid;
-			return this._requestObj("PATCH", 'core', path, null, ['adhocgroupadmin'], data, callback);
+			return this._requestObj("PATCH", 'core', path, null, data, callback);
 		},
 
 		"addGroup": function(data, callback) {
 			var path = "/adhocgroups/";
-			return this._requestObj("POST", 'core', path, null, ['adhocgroupadmin'], data, callback);
+			return this._requestObj("POST", 'core', path, null, data, callback);
 		},
 
 		"delGroup": function(groupid, callback) {
 			var path = "/adhocgroups/" + groupid;
-			return this._requestObj("DELETE", 'core', path, null, ['adhocgroupadmin'], null, callback);
+			return this._requestObj("DELETE", 'core', path, null, null, callback);
 		},
 
 		"getGroupMembers": function(groupid, callback) {
 			var path = "/adhocgroups/" + groupid + "/members";
-			return this._request('core', path, null, ['adhocgroupadmin'], callback);
+			return this._request('core', path, null, callback);
 		},
 
 		"addGroupMember": function(groupid, token, type, callback) {
@@ -310,7 +309,7 @@ define(function(require, exports, module) {
 				"type": type
 			}];
 			var path = "/adhocgroups/" + groupid + "/members";
-			return this._requestObj("PATCH", 'core', path, null, ['adhocgroupadmin'], data, callback);
+			return this._requestObj("PATCH", 'core', path, null, data, callback);
 		},
 
 		"updateGroupMember": function(groupid, userid, type, callback) {
@@ -319,24 +318,24 @@ define(function(require, exports, module) {
 				"type": type
 			}];
 			var path = "/adhocgroups/" + groupid + "/members";
-			return this._requestObj("PATCH", 'core', path, null, ['adhocgroupadmin'], data, callback);
+			return this._requestObj("PATCH", 'core', path, null, data, callback);
 		},
 
 		"delGroupMember": function(groupid, userid, callback) {
 			var data = [userid];
 			var path = "/adhocgroups/" + groupid + "/members";
-			return this._requestObj("DELETE", 'core', path, null, ['adhocgroupadmin'], data, callback);
+			return this._requestObj("DELETE", 'core', path, null, data, callback);
 		},
 
 		"getGroupMemberships": function(callback) {
 			var path = "/adhocgroups/memberships";
-			return this._request('core', path, null, ['adhocgroupadmin'], callback);
+			return this._request('core', path, null, callback);
 		},
 
 		"confirmGroupMembership": function(groupid, callback) {
 			var path = "/adhocgroups/memberships";
 			var data = [groupid];
-			return this._requestObj("PATCH", 'core', path, null, ['adhocgroupadmin'], data, callback);
+			return this._requestObj("PATCH", 'core', path, null, data, callback);
 		},
 
 
@@ -345,49 +344,49 @@ define(function(require, exports, module) {
 			var data = {
 				"invitation_token": token
 			};
-			return this._requestObj("POST", 'core', path, null, ['adhocgroupadmin'], data, callback);
+			return this._requestObj("POST", 'core', path, null, data, callback);
 		},
 
 		"leaveGroup": function(groupid, callback) {
 			var path = "/adhocgroups/memberships";
 			var data = [groupid];
-			return this._requestObj("DELETE", 'core', path, null, ['adhocgroupadmin'], data, callback);
+			return this._requestObj("DELETE", 'core', path, null, data, callback);
 		},
 
 		"vootGroupsList": function(callback) {
 			var path = "/groups/me/groups";
-			return this._request('groups', path, null, ['groups'], callback);
+			return this._request('groups', path, null, callback);
 		},
 		"vootGroupsPublicList": function(callback) {
 			var path = "/groups/groups";
-			return this._request('groups', path, null, ['groups'], callback);
+			return this._request('groups', path, null, callback);
 		},
 		"vootGrouptypes": function(callback) {
 			var path = "/groups/grouptypes";
-			return this._request('groups', path, null, ['groups'], callback);
+			return this._request('groups', path, null, callback);
 		},
 
 
 		"authorizationsList": function(callback) {
 			var path = "/authorizations/";
-			return this._request('core', path, null, ['authzinfo'], callback);
+			return this._request('core', path, null, callback);
 		},
 
 		"authorizationsDelete": function(id, callback) {
 			var path = "/authorizations/" + id;
-			return this._requestObj("DELETE", 'core', path, null, ['authzinfo'], null, callback);
+			return this._requestObj("DELETE", 'core', path, null, null, callback);
 
 		},
 
 		"resources_owned": function() {
 			var path = "/authorizations/resources_owned";
-			return this._request('core', path, null, ['authzinfo']);
+			return this._request('core', path, null);
 		},
 
 
 		"withdrawconsent": function() {
 			var path = "/authorizations/consent_withdrawn";
-			return this._requestObj("POST", 'core', path, null, ['authzinfo'], null);
+			return this._requestObj("POST", 'core', path, null, null);
 		},
 
 
@@ -396,7 +395,7 @@ define(function(require, exports, module) {
 		 * Section on implementing OAuth based requests...
 		 */
 
-		"_request": function(instance, endpoint, request, require, callback, inOptions) {
+		"_request": function(instance, endpoint, request, callback, inOptions) {
 			var options = inOptions || {};
 			options.url = this.config.apis[instance] + endpoint;
 			if (this.config.debug) {
@@ -407,7 +406,7 @@ define(function(require, exports, module) {
 		},
 
 
-		"_requestObj": function(method, instance, endpoint, request, require, data, callback, inOptions) {
+		"_requestObj": function(method, instance, endpoint, request, data, callback, inOptions) {
 			var options = inOptions || {};
 			options.url = this.config.apis[instance] + endpoint;
 			options.type = method;
@@ -422,7 +421,7 @@ define(function(require, exports, module) {
 
 
 		// this._requestBinary('POST', 'core', path, null, ['clientadmin'], obj, contenttype);
-		"_requestBinary": function(method, instance, endpoint, request, require, data, contentType, callback, inOptions) {
+		"_requestBinary": function(method, instance, endpoint, request, data, contentType, callback, inOptions) {
 
 			var options = inOptions || {};
 			options.url = this.config.apis[instance] + endpoint;
