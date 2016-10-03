@@ -432,7 +432,7 @@ define(function(require, exports, module) {
 			return this.jso.request(options);
 		},
 
-		"_requestPublic": function(instance, endpoint, callback) {
+		"_requestPublic": function(instance, endpoint) {
 
 			var that = this;
 			var url = this.config.apis[instance] + endpoint;
@@ -444,9 +444,6 @@ define(function(require, exports, module) {
 					url: url,
 					dataType: 'json',
 					success: function(data) {
-						if (typeof callback === 'function') {
-							callback(data);
-						}
 						resolve(data);
 					},
 					error: function(jqXHR, text, error) {
