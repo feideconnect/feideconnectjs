@@ -196,9 +196,9 @@ define(function(require, exports, module) {
 			return this._requestBinary('POST', 'core', path, obj, contenttype);
 		},
 
-		"clientsPublicList": function(callback) {
+		"clientsPublicList": function() {
 			var path = "/clientadm/public/";
-			return this._requestPublic('core', path, callback);
+			return this._requestPublic('core', path);
 		},
 
 
@@ -220,9 +220,9 @@ define(function(require, exports, module) {
 			return this._request('core', path);
 		},
 
-		"apigkPublicList": function(callback) {
+		"apigkPublicList": function() {
 			var path = "/apigkadm/public";
-			return this._requestPublic('core', path, callback);
+			return this._requestPublic('core', path);
 
 		},
 
