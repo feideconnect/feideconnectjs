@@ -403,26 +403,20 @@ define(function(require, exports, module) {
 
 		"_requestObj": function(method, instance, endpoint, data, inOptions) {
 			var options = inOptions || {};
-			options.url = this.config.apis[instance] + endpoint;
 			options.type = method;
 			options.data = JSON.stringify(data, undefined, 2);
 			options.contentType = 'application/json; charset=UTF-8';
-			if (this.config.debug) {
-				console.log("About to perform a JSO OAuth request to " + instance + " [" + options.url + "]");
-			}
-			return this.jso.request(options);
+			return this._request(instance, endpoint, options);
 		},
 
 		"_requestBinary": function(method, instance, endpoint, data, contentType, inOptions) {
 
 			var options = inOptions || {};
-			options.url = this.config.apis[instance] + endpoint;
 			options.type = method;
 			options.data = data;
 			options.contentType = contentType;
 			options.processData = false;
-			// console.log("About to perform a JSO OAuth request to " + instance, options);
-			return this.jso.request(options);
+			return this._request(instance, endpoint, options);
 		},
 
 		"_requestPublic": function(instance, endpoint) {
