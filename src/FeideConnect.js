@@ -53,14 +53,14 @@ define(function(require, exports, module) {
 		},
 
 
-		"psOrgs": function(callback) {
+		"psOrgs": function() {
 			var path = "peoplesearch/orgs";
-			return this._request('core', '/peoplesearch/orgs', callback);
+			return this._request('core', '/peoplesearch/orgs');
 		},
 
-		"psSearch": function(realm, query, callback) {
+		"psSearch": function(realm, query) {
 			var path = "/peoplesearch/search/" + realm + "/" + encodeURI(query);
-			return this._request('core', path, callback);
+			return this._request('core', path);
 		},
 
 
@@ -95,17 +95,17 @@ define(function(require, exports, module) {
 			return this._requestBinary('POST', 'core', path, obj, contenttype);
 		},
 
-		"getMandatoryClients": function(orgid, callback) {
+		"getMandatoryClients": function(orgid) {
 			var path = "/orgs/" + orgid + "/mandatory_clients/";
-			return this._request('core', path, callback);
+			return this._request('core', path);
 		},
-		"setMandatoryClient": function(orgid, clientid, callback) {
+		"setMandatoryClient": function(orgid, clientid) {
 			var path = "/orgs/" + orgid + "/mandatory_clients/" + clientid;
-			return this._requestObj('PUT', 'core', path, null, callback);
+			return this._requestObj('PUT', 'core', path, null);
 		},
-		"removeMandatoryClient": function(orgid, clientid, callback) {
+		"removeMandatoryClient": function(orgid, clientid) {
 			var path = "/orgs/" + orgid + "/mandatory_clients/" + clientid;
-			return this._requestObj('DELETE', 'core', path, null, callback);
+			return this._requestObj('DELETE', 'core', path, null);
 		},
 
 		"orgServiceAdd": function(orgid, service) {
@@ -118,9 +118,9 @@ define(function(require, exports, module) {
 		},
 
 
-		"getClientPolicy": function(id, callback) {
+		"getClientPolicy": function(id) {
 			var path = "/clientadm/policy";
-			return this._request('core', path, callback);
+			return this._request('core', path);
 		},
 
 		"getOrgTargetedAPIs": function(orgid) {
@@ -133,14 +133,14 @@ define(function(require, exports, module) {
 			return this._requestObj("PATCH", 'core', path, data);
 		},
 
-		"getClient": function(id, callback) {
+		"getClient": function(id) {
 			var path = "/clientadm/clients/" + id;
-			return this._request('core', path, callback);
+			return this._request('core', path);
 		},
 
 		"getClientStats": function(id, params) {
 			var path = "/clientadm/clients/" + id + '/logins_stats/' + FeideConnect.buildQuery(params);
-			return this._request('core', path, undefined, {});
+			return this._request('core', path, {});
 		},
 
 
@@ -149,42 +149,42 @@ define(function(require, exports, module) {
 			return this._request('core', path);
 		},
 
-		"clientsList": function(callback) {
+		"clientsList": function() {
 			var path = "/clientadm/clients/";
-			return this._request('core', path, callback);
+			return this._request('core', path);
 		},
 
-		"clientsByScope": function(scope, callback) {
+		"clientsByScope": function(scope) {
 			var path = "/clientadm/clients/?scope=" + encodeURIComponent(scope);
-			return this._request('core', path, callback);
+			return this._request('core', path);
 		},
 
-		"clientsByOrg": function(orgid, callback) {
+		"clientsByOrg": function(orgid) {
 			var path = "/clientadm/clients/";
 			if (orgid !== null) {
 				path += "?organization=" + encodeURIComponent(orgid);
 			}
-			return this._request('core', path, callback);
+			return this._request('core', path);
 		},
 
-		"clientsRegister": function(obj, callback) {
+		"clientsRegister": function(obj) {
 			var path = "/clientadm/clients/";
-			return this._requestObj('POST', 'core', path, obj, callback);
+			return this._requestObj('POST', 'core', path, obj);
 		},
 
-		"clientsUpdate": function(obj, callback) {
+		"clientsUpdate": function(obj) {
 			var path = "/clientadm/clients/" + obj.id;
-			return this._requestObj('PATCH', 'core', path, obj, callback);
+			return this._requestObj('PATCH', 'core', path, obj);
 		},
 
-		"clientsAuthorizeAPIGKscopes": function(id, obj, callback) {
+		"clientsAuthorizeAPIGKscopes": function(id, obj) {
 			var path = "/clientadm/clients/" + id + "/gkscopes";
-			return this._requestObj('PATCH', 'core', path, obj, callback);
+			return this._requestObj('PATCH', 'core', path, obj);
 		},
 
-		"clientsDelete": function(clientid, callback) {
+		"clientsDelete": function(clientid) {
 			var path = "/clientadm/clients/" + clientid;
-			return this._requestObj('DELETE', 'core', path, null, callback);
+			return this._requestObj('DELETE', 'core', path, null);
 		},
 
 		"clientsUpdateLogo": function(id, obj) {
@@ -202,22 +202,22 @@ define(function(require, exports, module) {
 		},
 
 
-		"getAPIGK": function(id, callback) {
+		"getAPIGK": function(id) {
 			var path = "/apigkadm/apigks/" + id;
-			return this._request('core', path, callback);
+			return this._request('core', path);
 		},
 
-		"apigkList": function(callback) {
+		"apigkList": function() {
 			var path = "/apigkadm/apigks/";
-			return this._request('core', path, callback);
+			return this._request('core', path);
 		},
 
-		"apigkListByOrg": function(orgid, callback) {
+		"apigkListByOrg": function(orgid) {
 			var path = "/apigkadm/apigks/";
 			if (orgid !== null) {
 				path += "?organization=" + encodeURIComponent(orgid);
 			}
-			return this._request('core', path, callback);
+			return this._request('core', path);
 		},
 
 		"apigkPublicList": function(callback) {
@@ -226,155 +226,155 @@ define(function(require, exports, module) {
 
 		},
 
-		"apigkRegister": function(obj, callback) {
+		"apigkRegister": function(obj) {
 			var path = "/apigkadm/apigks/";
-			return this._requestObj('POST', 'core', path, obj, callback);
+			return this._requestObj('POST', 'core', path, obj);
 		},
-		"apigkUpdate": function(obj, callback) {
+		"apigkUpdate": function(obj) {
 			var path = "/apigkadm/apigks/" + obj.id;
 			// delete obj.id;
 			// var x = {name: obj.name};
-			return this._requestObj('PATCH', 'core', path, obj, callback);
+			return this._requestObj('PATCH', 'core', path, obj);
 		},
-		"apigkDelete": function(id, callback) {
+		"apigkDelete": function(id) {
 			var path = "/apigkadm/apigks/" + id;
-			return this._requestObj('DELETE', 'core', path, null, callback);
+			return this._requestObj('DELETE', 'core', path, null);
 		},
-		"apigkUpdateLogo": function(id, obj, callback) {
+		"apigkUpdateLogo": function(id, obj) {
 			var path = "/apigkadm/apigks/" + id + "/logo";
 			var contenttype = obj.contenttype;
 			console.log("File content type: " + contenttype);
 			contenttype = "image/jpeg";
-			return this._requestBinary('POST', 'core', path, obj, contenttype, callback);
+			return this._requestBinary('POST', 'core', path, obj, contenttype);
 		},
-		"apigkCheck": function(id, callback) {
+		"apigkCheck": function(id) {
 			var path = "/apigkadm/apigks/" + id + "/exists";
-			return this._request('core', path, callback);
+			return this._request('core', path);
 		},
 
-		"apigkClientRequests": function(callback) {
+		"apigkClientRequests": function() {
 			var owner = 'me';
 			var path = "/apigkadm/apigks/owners/" + owner + "/clients/";
-			return this._request('core', path, callback);
+			return this._request('core', path);
 		},
 
-		"apigkClientRequestsByOrg": function(orgid, callback) {
+		"apigkClientRequestsByOrg": function(orgid) {
 			var path = "/apigkadm/apigks/orgs/" + orgid + "/clients/";
-			return this._request('core', path, callback);
+			return this._request('core', path);
 		},
 
-		"getGroups": function(callback) {
+		"getGroups": function() {
 			var path = "/adhocgroups/";
-			return this._request('core', path, callback);
+			return this._request('core', path);
 		},
 
-		"getGroup": function(id, callback) {
+		"getGroup": function(id) {
 			var path = "/adhocgroups/" + id;
-			return this._request('core', path, callback);
+			return this._request('core', path);
 		},
 
-		"getGroupInvited": function(id, token, callback) {
+		"getGroupInvited": function(id, token) {
 			var path = "/adhocgroups/" + id + '?invitation_token=' + encodeURIComponent(token);
-			return this._request('core', path, callback);
+			return this._request('core', path);
 		},
 
-		"getGroupDetails": function(id, callback) {
+		"getGroupDetails": function(id) {
 			var path = "/adhocgroups/" + id + "/details";
-			return this._request('core', path, callback);
+			return this._request('core', path);
 		},
 
-		"updateGroup": function(groupid, data, callback) {
+		"updateGroup": function(groupid, data) {
 			var path = "/adhocgroups/" + groupid;
-			return this._requestObj("PATCH", 'core', path, data, callback);
+			return this._requestObj("PATCH", 'core', path, data);
 		},
 
-		"addGroup": function(data, callback) {
+		"addGroup": function(data) {
 			var path = "/adhocgroups/";
-			return this._requestObj("POST", 'core', path, data, callback);
+			return this._requestObj("POST", 'core', path, data);
 		},
 
-		"delGroup": function(groupid, callback) {
+		"delGroup": function(groupid) {
 			var path = "/adhocgroups/" + groupid;
-			return this._requestObj("DELETE", 'core', path, null, callback);
+			return this._requestObj("DELETE", 'core', path, null);
 		},
 
-		"getGroupMembers": function(groupid, callback) {
+		"getGroupMembers": function(groupid) {
 			var path = "/adhocgroups/" + groupid + "/members";
-			return this._request('core', path, callback);
+			return this._request('core', path);
 		},
 
-		"addGroupMember": function(groupid, token, type, callback) {
+		"addGroupMember": function(groupid, token, type) {
 			var data = [{
 				"token": token,
 				"type": type
 			}];
 			var path = "/adhocgroups/" + groupid + "/members";
-			return this._requestObj("PATCH", 'core', path, data, callback);
+			return this._requestObj("PATCH", 'core', path, data);
 		},
 
-		"updateGroupMember": function(groupid, userid, type, callback) {
+		"updateGroupMember": function(groupid, userid, type) {
 			var data = [{
 				"id": userid,
 				"type": type
 			}];
 			var path = "/adhocgroups/" + groupid + "/members";
-			return this._requestObj("PATCH", 'core', path, data, callback);
+			return this._requestObj("PATCH", 'core', path, data);
 		},
 
-		"delGroupMember": function(groupid, userid, callback) {
+		"delGroupMember": function(groupid, userid) {
 			var data = [userid];
 			var path = "/adhocgroups/" + groupid + "/members";
-			return this._requestObj("DELETE", 'core', path, data, callback);
+			return this._requestObj("DELETE", 'core', path, data);
 		},
 
-		"getGroupMemberships": function(callback) {
+		"getGroupMemberships": function() {
 			var path = "/adhocgroups/memberships";
-			return this._request('core', path, callback);
+			return this._request('core', path);
 		},
 
-		"confirmGroupMembership": function(groupid, callback) {
+		"confirmGroupMembership": function(groupid) {
 			var path = "/adhocgroups/memberships";
 			var data = [groupid];
-			return this._requestObj("PATCH", 'core', path, data, callback);
+			return this._requestObj("PATCH", 'core', path, data);
 		},
 
 
-		"joinGroupFromInvitation": function(groupid, token, callback) {
+		"joinGroupFromInvitation": function(groupid, token) {
 			var path = "/adhocgroups/" + groupid + "/invitation";
 			var data = {
 				"invitation_token": token
 			};
-			return this._requestObj("POST", 'core', path, data, callback);
+			return this._requestObj("POST", 'core', path, data);
 		},
 
-		"leaveGroup": function(groupid, callback) {
+		"leaveGroup": function(groupid) {
 			var path = "/adhocgroups/memberships";
 			var data = [groupid];
-			return this._requestObj("DELETE", 'core', path, data, callback);
+			return this._requestObj("DELETE", 'core', path, data);
 		},
 
-		"vootGroupsList": function(callback) {
+		"vootGroupsList": function() {
 			var path = "/groups/me/groups";
-			return this._request('groups', path, callback);
+			return this._request('groups', path);
 		},
-		"vootGroupsPublicList": function(callback) {
+		"vootGroupsPublicList": function() {
 			var path = "/groups/groups";
-			return this._request('groups', path, callback);
+			return this._request('groups', path);
 		},
-		"vootGrouptypes": function(callback) {
+		"vootGrouptypes": function() {
 			var path = "/groups/grouptypes";
-			return this._request('groups', path, callback);
+			return this._request('groups', path);
 		},
 
 
-		"authorizationsList": function(callback) {
+		"authorizationsList": function() {
 			var path = "/authorizations/";
-			return this._request('core', path, callback);
+			return this._request('core', path);
 		},
 
-		"authorizationsDelete": function(id, callback) {
+		"authorizationsDelete": function(id) {
 			var path = "/authorizations/" + id;
-			return this._requestObj("DELETE", 'core', path, null, callback);
+			return this._requestObj("DELETE", 'core', path, null);
 
 		},
 
@@ -395,7 +395,7 @@ define(function(require, exports, module) {
 		 * Section on implementing OAuth based requests...
 		 */
 
-		"_request": function(instance, endpoint, callback, inOptions) {
+		"_request": function(instance, endpoint, inOptions) {
 			var options = inOptions || {};
 			options.url = this.config.apis[instance] + endpoint;
 			if (this.config.debug) {
@@ -406,7 +406,7 @@ define(function(require, exports, module) {
 		},
 
 
-		"_requestObj": function(method, instance, endpoint, data, callback, inOptions) {
+		"_requestObj": function(method, instance, endpoint, data, inOptions) {
 			var options = inOptions || {};
 			options.url = this.config.apis[instance] + endpoint;
 			options.type = method;
@@ -420,7 +420,7 @@ define(function(require, exports, module) {
 
 
 
-		"_requestBinary": function(method, instance, endpoint, data, contentType, callback, inOptions) {
+		"_requestBinary": function(method, instance, endpoint, data, contentType, inOptions) {
 
 			var options = inOptions || {};
 			options.url = this.config.apis[instance] + endpoint;
