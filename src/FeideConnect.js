@@ -13,6 +13,7 @@ define(function(require, exports, module) {
 		authorization: "https://auth.dataporten.no/oauth/authorization",
 		token: "https://auth.dataporten.no/oauth/token",
 		apis: {
+			"clientadm": "https://api.dataporten.no/clientadm",
 			"auth": "https://auth.dataporten.no",
 			"core": "https://api.dataporten.no",
 			"groups": "https://groups-api.dataporten.no"
@@ -40,6 +41,9 @@ define(function(require, exports, module) {
 			var xconfig = $.extend({}, selectedConfig, defaults, config);
 
 			this._super(xconfig);
+			if (!("clientadm" in this.config.apis)) {
+				this.config.apis.clientadm = this.config.apis.core + '/clientadm';
+			}
 		},
 
 		"logout": function() {
@@ -123,28 +127,28 @@ define(function(require, exports, module) {
 		},
 
 		"getClientPolicy": function(id) {
-			var path = "/clientadm/policy";
-			return this._request('core', path);
+			var path = "/policy";
+			return this._request('clientadm', path);
 		},
 
 		"getOrgTargetedAPIs": function(orgid) {
-			var path = '/clientadm/realmclients/targetrealm/' + orgid + '/';
-			return this._request('core', path);
+			var path = '/realmclients/targetrealm/' + orgid + '/';
+			return this._request('clientadm', path);
 		},
 
 		"updateOrgAuthorizations": function(realm, clientid, data) {
-			var path = '/clientadm/clients/' + clientid + '/orgauthorization/' + realm;
-			return this._requestObj("PATCH", 'core', path, data);
+			var path = '/clients/' + clientid + '/orgauthorization/' + realm;
+			return this._requestObj("PATCH", 'clientadm', path, data);
 		},
 
 		"getClient": function(id) {
-			var path = "/clientadm/clients/" + id;
-			return this._request('core', path);
+			var path = "/clients/" + id;
+			return this._request('clientadm', path);
 		},
 
 		"getClientStats": function(id, params) {
-			var path = "/clientadm/clients/" + id + '/logins_stats/' + FeideConnect.buildQuery(params);
-			return this._request('core', path);
+			var path = "/clients/" + id + '/logins_stats/' + FeideConnect.buildQuery(params);
+			return this._request('clientadm', path);
 		},
 
 		"getMyMandatoryClients": function(orgid) {
@@ -153,55 +157,55 @@ define(function(require, exports, module) {
 		},
 
 		"clientsList": function() {
-			var path = "/clientadm/clients/";
-			return this._request('core', path);
+			var path = "/clients/";
+			return this._request('clientadm', path);
 		},
 
 		"clientsByScope": function(scope) {
-			var path = "/clientadm/clients/?scope=" + encodeURIComponent(scope);
-			return this._request('core', path);
+			var path = "/clients/?scope=" + encodeURIComponent(scope);
+			return this._request('clientadm', path);
 		},
 
 		"clientsByOrg": function(orgid) {
-			var path = "/clientadm/clients/";
+			var path = "/clients/";
 			if (orgid !== null) {
 				path += "?organization=" + encodeURIComponent(orgid);
 			}
-			return this._request('core', path);
+			return this._request('clientadm', path);
 		},
 
 		"clientsRegister": function(obj) {
-			var path = "/clientadm/clients/";
-			return this._requestObj('POST', 'core', path, obj);
+			var path = "/clients/";
+			return this._requestObj('POST', 'clientadm', path, obj);
 		},
 
 		"clientsUpdate": function(obj) {
-			var path = "/clientadm/clients/" + obj.id;
-			return this._requestObj('PATCH', 'core', path, obj);
+			var path = "/clients/" + obj.id;
+			return this._requestObj('PATCH', 'clientadm', path, obj);
 		},
 
 		"clientsAuthorizeAPIGKscopes": function(id, obj) {
-			var path = "/clientadm/clients/" + id + "/gkscopes";
-			return this._requestObj('PATCH', 'core', path, obj);
+			var path = "/clients/" + id + "/gkscopes";
+			return this._requestObj('PATCH', 'clientadm', path, obj);
 		},
 
 		"clientsDelete": function(clientid) {
-			var path = "/clientadm/clients/" + clientid;
-			return this._requestObj('DELETE', 'core', path, null);
+			var path = "/clients/" + clientid;
+			return this._requestObj('DELETE', 'clientadm', path, null);
 		},
 
 		"clientsUpdateLogo": function(id, obj) {
-			var path = "/clientadm/clients/" + id + "/logo";
+			var path = "/clients/" + id + "/logo";
 			var contenttype = "image/jpeg";
 			if (obj.type) {
 				contenttype = obj.type;
 			}
-			return this._requestBinary('POST', 'core', path, obj, contenttype);
+			return this._requestBinary('POST', 'clientadm', path, obj, contenttype);
 		},
 
 		"clientsPublicList": function() {
-			var path = "/clientadm/public/";
-			return this._requestPublic('core', path);
+			var path = "/public/";
+			return this._requestPublic('clientadm', path);
 		},
 
 		"getAPIGK": function(id) {
