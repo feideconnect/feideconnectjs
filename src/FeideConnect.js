@@ -477,7 +477,7 @@ define(function(require, exports, module) {
 			pl.push(encodeURIComponent(key) + '=' + encodeURIComponent(params[key]));
 		}
 		return '?' + pl.join('&');
-	}
+	};
 
 	exports.FeideConnect = FeideConnect;
 
