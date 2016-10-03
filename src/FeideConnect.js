@@ -155,11 +155,6 @@ define(function(require, exports, module) {
 			return this._request('clientadm', path);
 		},
 
-		"getMyMandatoryClients": function(orgid) {
-			var path = '/authorizations/mandatory_clients/';
-			return this._request('core', path);
-		},
-
 		"clientsList": function() {
 			var path = "/clients/";
 			return this._request('clientadm', path);
@@ -398,6 +393,11 @@ define(function(require, exports, module) {
 		"withdrawconsent": function() {
 			var path = "/authorizations/consent_withdrawn";
 			return this._requestObj("POST", 'core', path, null);
+		},
+
+		"getMyMandatoryClients": function(orgid) {
+			var path = '/authorizations/mandatory_clients/';
+			return this._request('core', path);
 		},
 
 		/*
