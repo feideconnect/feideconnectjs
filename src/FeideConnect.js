@@ -56,6 +56,11 @@ define(function(require, exports, module) {
 			window.location = url;
 		},
 
+
+		"profilePhotoURL": function(user) {
+			return this.config.apis['core'] + '/userinfo/v1/user/media/' + user.profilephoto;
+		},
+
 		"getUserInfo": function() {
 			return this._request('auth', '/userinfo');
 		},
