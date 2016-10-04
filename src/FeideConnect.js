@@ -173,6 +173,16 @@ define(function(require, exports, module) {
 			return this._request('clientadm', path);
 		},
 
+		"getScopeDef": function() {
+			var endpoint = this.config.apis['clientadm'] + '/scopes/';
+			return new Promise(function(resolve, reject) {
+				$.getJSON(endpoint, function(scopePolicy) {
+					resolve(scopePolicy);
+				});
+			});
+
+		},
+
 		"clientsByOrg": function(orgid) {
 			var path = "/clients/";
 			if (orgid !== null) {
