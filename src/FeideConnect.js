@@ -57,8 +57,8 @@ define(function(require, exports, module) {
 		},
 
 
-		"profilePhotoURL": function(user) {
-			return this.config.apis['core'] + '/userinfo/v1/user/media/' + user.profilephoto;
+		"profilePhotoURL": function(userid) {
+			return this.config.apis['core'] + '/userinfo/v1/user/media/' + userid;
 		},
 
 		"getUserInfo": function() {
