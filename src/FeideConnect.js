@@ -61,6 +61,10 @@ define(function(require, exports, module) {
 			return this.config.apis['core'] + '/userinfo/v1/user/media/' + userid;
 		},
 
+		"orgLogoURL": function(id) {
+			return this.config.apis['core'] + '/orgs/' + id + '/logo';
+		},
+
 		"getUserInfo": function() {
 			return this._request('auth', '/userinfo');
 		},
