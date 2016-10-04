@@ -46,7 +46,7 @@ define(function(require, exports, module) {
 				this.config.apis.clientadm = this.config.apis.core + '/clientadm';
 			}
 			if (!("apigkadm" in this.config.apis)) {
-				this.config.apis.clientadm = this.config.apis.core + '/apigkadm';
+				this.config.apis.apigkadm = this.config.apis.core + '/apigkadm';
 			}
 		},
 
