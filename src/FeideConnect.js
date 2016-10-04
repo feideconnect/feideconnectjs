@@ -69,6 +69,10 @@ define(function(require, exports, module) {
 			return this.config.apis['clientadm'] + '/clients/' + id + '/logo';
 		},
 
+		"apigkLogoURL": function(id) {
+			return this.config.apis['apigkadm'] + '/apigks/' + id + '/logo';
+		},
+
 		"getUserInfo": function() {
 			return this._request('auth', '/userinfo');
 		},
