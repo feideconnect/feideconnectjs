@@ -13,8 +13,8 @@ define(function(require, exports, module) {
 		authorization: "https://auth.dataporten.no/oauth/authorization",
 		token: "https://auth.dataporten.no/oauth/token",
 		apis: {
-			"apigkadm": "https://api.dataporten.no/apigkadm",
-			"clientadm": "https://api.dataporten.no/clientadm",
+			"apigkadm": "https://apigkadmin.dataporten-api.no",
+			"clientadm": "https://clientadmin.dataporten-api.no",
 			"auth": "https://auth.dataporten.no",
 			"core": "https://api.dataporten.no",
 			"groups": "https://groups-api.dataporten.no"
