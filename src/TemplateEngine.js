@@ -26,7 +26,16 @@ define(function(require, exports, module) {
 				view._ = this.dict.get();
 				view.intl = {
 					"locales": this.dict.getItem("_lang") || "en",
-					"messages": this.dict.get()
+					"messages": this.dict.get(),
+					"formats": {
+						"date": {
+							"short": {
+								"day": "numeric",
+								"month": "short",
+								"year": "numeric"
+							}
+						}
+					}
 				};
 
 			}
