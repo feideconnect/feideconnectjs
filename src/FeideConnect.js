@@ -167,6 +167,11 @@ define(function(require, exports, module) {
 			return this._request('clientadm', path);
 		},
 
+		"getPublicClient": function(id) {
+			var path = "/clients/" + id;
+			return this._requestPublic('clientadm', path);
+		},
+
 		"getClientStats": function(id, params) {
 			var options = {
 				'data': params
