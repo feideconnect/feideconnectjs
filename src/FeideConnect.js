@@ -180,14 +180,16 @@ define(function(require, exports, module) {
 			return this._request('clientadm', path, options);
 		},
 
-		"clientsList": function() {
+		"clientsList": function(params) {
+			var options = {
+				'data': params
+			};
 			var path = "/clients/";
-			return this._request('clientadm', path);
+			return this._request('clientadm', path, options);
 		},
 
 		"clientsByScope": function(scope) {
-			var path = "/clients/?scope=" + encodeURIComponent(scope);
-			return this._request('clientadm', path);
+			return this.clientsList({'scope': scope});
 		},
 
 		"getScopeDef": function() {
@@ -201,11 +203,11 @@ define(function(require, exports, module) {
 		},
 
 		"clientsByOrg": function(orgid) {
-			var path = "/clients/";
+			var params = {};
 			if (orgid !== null) {
-				path += "?organization=" + encodeURIComponent(orgid);
+				params.organization = orgid;
 			}
-			return this._request('clientadm', path);
+			return this.clientsList(params);
 		},
 
 		"clientsRegister": function(obj) {
@@ -247,17 +249,20 @@ define(function(require, exports, module) {
 			return this._request('apigkadm', path);
 		},
 
-		"apigkList": function() {
+		"apigkList": function(params) {
+			var options = {
+				'data': params
+			};
 			var path = "/apigks/";
-			return this._request('apigkadm', path);
+			return this._request('apigkadm', path, options);
 		},
 
 		"apigkListByOrg": function(orgid) {
-			var path = "/apigks/";
+			var params = {};
 			if (orgid !== null) {
-				path += "?organization=" + encodeURIComponent(orgid);
+				params.organization = orgid;
 			}
-			return this._request('apigkadm', path);
+			return this.apigkList(params);
 		},
 
 		"apigkPublicList": function() {
