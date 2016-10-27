@@ -60,6 +60,9 @@ define(function(require, exports, module) {
 		return value.replace(/[\r\n]{2,}/g, '<br /><br />');
 	};
 
+	dust.filters.acceptsinglenewline = function(value) {
+		return value.replace('/\n/g', '<br />');
+	};
 	return TemplateEngine;
 
 });
