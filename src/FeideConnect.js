@@ -306,6 +306,11 @@ define(function(require, exports, module) {
 			return this._request('apigkadm', path);
 		},
 
+		"apigkDelegatedClientRequests": function() {
+			var path = "/apigks/delegates/me/clients/";
+				return this._request('apigkadm', path);
+		},
+
 		"apigkClientRequestsByOrg": function(orgid) {
 			var path = "/apigks/orgs/" + orgid + "/clients/";
 			return this._request('apigkadm', path);
