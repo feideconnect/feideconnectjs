@@ -1,28 +1,21 @@
 {
-	"name": "feideconnectjs",
-	"version": "2.14.0",
-	"description": "Dataporten Javascript Library",
-	"authors": [
-		"Andreas Åkre Solberg"
-	],
-	"homepage": "http://dataporten.no",
-	"main": "src/FeideConnect.js",
-	"license": "LGPL 2.1",
-	"ignore": [
-		"**/.*",
-		"node_modules",
-		"bower_components",
-		"test",
-		"tests"
-	],
-	"ignore": [
-		"**/.*",
-		"node_modules",
-		"bower_components",
-		"test",
-		"tests"
-	],
-	"dependencies": {
-		"jso": "version3"
-	}
+    "authors": [
+        "Andreas \u00c5kre Solberg"
+    ],
+    "dependencies": {
+        "jso": "version3"
+    },
+    "description": "Dataporten Javascript Library",
+    "homepage": "http://dataporten.no",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "license": "LGPL 2.1",
+    "main": "src/FeideConnect.js",
+    "name": "feideconnectjs",
+    "version": "2.15.0"
 }
