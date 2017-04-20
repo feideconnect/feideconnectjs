@@ -430,6 +430,11 @@ define(function(require, exports, module) {
 			return this._requestObj("DELETE", 'core', path, null);
 		},
 
+		"authorizationsDeleteForAllUsers": function(id) {
+			var path = "/authorizations/all_users/" + id;
+			return this._requestObj("DELETE", 'core', path, null);
+		},
+
 		"resources_owned": function() {
 			var path = "/authorizations/resources_owned";
 			return this._request('core', path);
