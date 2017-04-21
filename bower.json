@@ -17,5 +17,5 @@
     "license": "LGPL 2.1",
     "main": "src/FeideConnect.js",
     "name": "feideconnectjs",
-    "version": "2.15.0"
+    "version": "2.16.0"
 }
