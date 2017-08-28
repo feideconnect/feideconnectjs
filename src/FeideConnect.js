@@ -482,9 +482,10 @@ define(function(require, exports, module) {
 			return this._request(instance, endpoint, options);
 		},
 
-		"_requestPublic": function(instance, endpoint) {
+		"_requestPublic": function(instance, endpoint, inOptions) {
 
 			var that = this;
+			var options = inOptions || {};
 			var url = this.config.apis[instance] + endpoint;
 			if (this.config.debug) {
 				console.log("About to perform a public request to " + instance + " [" + url + "]");
@@ -493,6 +494,7 @@ define(function(require, exports, module) {
 				$.ajax({
 					url: url,
 					dataType: 'json',
+					data: inOptions.data,
 					success: function(data) {
 						resolve(data);
 					},
