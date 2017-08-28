@@ -494,7 +494,7 @@ define(function(require, exports, module) {
 				$.ajax({
 					url: url,
 					dataType: 'json',
-					data: inOptions.data,
+					data: options.data,
 					success: function(data) {
 						resolve(data);
 					},
