@@ -107,6 +107,11 @@ define(function(require, exports, module) {
 			return this._requestObj("PATCH", 'core', path, data);
 		},
 
+		"orgsRegister": function(obj) {
+			var path = "/orgs/";
+			return this._requestObj('POST', 'core', path, obj);
+		},
+
 		"orgUpdateLogo": function(orgid, obj) {
 			var path = "/orgs/" + orgid + '/logo';
 			var contenttype = "image/png";
